@@ -38,32 +38,32 @@ std::string Range::toString() const {
 
 
 Subnet findBiggestSubnet(const Range &range) {
-    auto start = range.getFirstHost().to_uint();
-    auto end = range.getLastHost().to_uint();
-    auto capacity = end - start + 1;
+    uint64_t start = range.getFirstHost().to_uint();
+    uint64_t end = range.getLastHost().to_uint();
+    uint64_t capacity = end - start + 1;
 
-    auto subnetBasePow = static_cast<ushort>(log2(capacity));
-    uint32_t subnetSize = 1 << subnetBasePow;
-    uint32_t steps = start / subnetSize;
+    auto subnetBasePow = static_cast<ushort>(log2(static_cast<double>(capacity)));
+    uint64_t subnetSize = 1 << subnetBasePow;
+    uint64_t steps = start / subnetSize;
     auto subnetBase = steps * subnetSize;
 
     if (subnetBase < start) {
         subnetBase += subnetSize;
     }
 
-    uint64_t subnetUpperBorder = static_cast<uint64_t>(subnetBase) + static_cast<uint64_t>(subnetSize) - 1;
+    auto subnetUpperBorder = subnetBase + subnetSize - 1;
 
     if (subnetUpperBorder > end) {
         subnetBasePow--;
         subnetSize /= 2;
-        auto overDistance = static_cast<uint32_t>(subnetUpperBorder - end);
-        steps = (overDistance / subnetSize);
+        auto overDistance = subnetUpperBorder - end;
+        steps = overDistance / subnetSize;
         subnetBase -= steps * subnetSize;
     }
 
     ushort prefixLength = 32 - subnetBasePow;
 
-    return {subnetBase, prefixLength};
+    return {static_cast<uint32_t>(subnetBase), prefixLength};
 }
 
 
