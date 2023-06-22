@@ -1,10 +1,11 @@
 #include <utility>
+#include <optional>
 
 #include "Range.hpp"
 #include "consts.hpp"
 
 
-std::tuple<Range, Subnet, Range> decomposeToSubnetAndBorderRanges(const Range &range);
+std::tuple<std::optional<Range>, Subnet, std::optional<Range>> decomposeToSubnetAndBorderRanges(const Range &range);
 Subnet findBiggestSubnet(const Range &range);
 u_long findDashPosition(const std::string_view& sourceForm);
 
@@ -84,6 +85,17 @@ std::pair<std::vector<Host>, std::vector<Subnet>> Range::decomposeToHostsAndSubn
     std::vector<Host> hosts{};
     std::vector<Subnet> subnets{};
 
+    auto saveIfExists = [&](auto& range){
+        if (range.has_value()) {
+            if (range->getDistance() > 0) {
+                ranges.push_back(range.value());
+            }
+            else {
+                hosts.push_back(range.value().firstHost);
+            }
+        }
+    };
+
     while (!ranges.empty()) {
         auto range = ranges.back();
         ranges.pop_back();
@@ -98,19 +110,8 @@ std::pair<std::vector<Host>, std::vector<Subnet>> Range::decomposeToHostsAndSubn
         auto&& biggestSubnet = get<1>(out);
         auto&& upperRange = get<2>(out);
 
-        if (lowerRange.getDistance() > 0) {
-            ranges.push_back(lowerRange);
-        }
-        else if (!biggestSubnet.containsOnBorders(lowerRange.firstHost)) {
-            hosts.push_back(lowerRange.firstHost);
-        }
-
-        if (upperRange.getDistance() > 0) {
-            ranges.push_back(upperRange);
-        }
-        else if (!biggestSubnet.containsOnBorders(upperRange.firstHost)) {
-            hosts.push_back(upperRange.firstHost);
-        }
+        saveIfExists(lowerRange);
+        saveIfExists(upperRange);
 
         if (biggestSubnet.getPrefixLength() > 31) {
             hosts.emplace_back(biggestSubnet.to_uint());
@@ -124,22 +125,31 @@ std::pair<std::vector<Host>, std::vector<Subnet>> Range::decomposeToHostsAndSubn
 }
 
 
-std::tuple<Range, Subnet, Range> decomposeToSubnetAndBorderRanges(const Range &range) {
+std::tuple<std::optional<Range>, Subnet, std::optional<Range>> decomposeToSubnetAndBorderRanges(const Range &range) {
+    std::optional<Range> lowerRange{};
+    std::optional<Range> upperRange{};
+
     auto subnet = findBiggestSubnet(range);
-    auto lowBoundary = subnet.to_uint() - 1;
 
-    if (lowBoundary < range.getFirstHost().to_uint()) {
-        lowBoundary = subnet.to_uint();
+    if (subnet.to_uint() != range.getFirstHost().to_uint()) {
+        auto lowBoundary = subnet.to_uint() - 1;
+
+        if (lowBoundary < range.getFirstHost().to_uint()) {
+            lowBoundary = subnet.to_uint();
+        }
+
+        lowerRange = Range(range.getFirstHost(), Host(lowBoundary));
     }
 
-    auto topBoundary = subnet.broadcast_to_uint() + 1;
+    if (subnet.broadcast_to_uint() != range.getLastHost().to_uint()) {
+        auto topBoundary = subnet.broadcast_to_uint() + 1;
 
-    if (topBoundary > range.getLastHost().to_uint()) {
-        topBoundary = subnet.broadcast_to_uint();
+        if (topBoundary > range.getLastHost().to_uint()) {
+            topBoundary = subnet.broadcast_to_uint();
+        }
+
+        upperRange = Range(Host(topBoundary), range.getLastHost());
     }
-
-    auto lowerRange = Range(range.getFirstHost(), Host(lowBoundary));
-    auto upperRange = Range(Host(topBoundary), range.getLastHost());
 
     return {lowerRange, subnet, upperRange};
 }
