@@ -42,7 +42,7 @@ auto testProduceRecords = [](const auto& rawRecords, auto& expectedCount) {
 
 TEST(RecordsProducerTest, make) {
     auto validHosts = {"1.1.1.1", "2.223.232.3", "255.255.255.255"};
-    auto validSubnets = {"1.1.1.1/0", "2.223.232.3/12", "255.255.255.255/32"};
+    auto validSubnets = {"1.1.1.1/0", "2.223.232.3/12", "255.255.255.255/32", "1.1.1.1/0", "0.0.0.0/32"};
     auto validRanges = {"1.1.1.1-1.1.1.2", "2.223.232.3-2.0.0.0", "255.255.255.255-1.1.1.1"};
     auto invalids = {"1.1.1", "2.223.2232.3/11", "255.255.255.256"};
 
