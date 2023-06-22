@@ -44,7 +44,8 @@ Subnet findBiggestSubnet(const Range &range) {
     uint64_t capacity = end - start + 1;
 
     auto subnetBasePow = static_cast<ushort>(log2(static_cast<double>(capacity)));
-    uint64_t subnetSize = 1 << subnetBasePow;
+    uint64_t subnetSize = 1;
+    subnetSize <<= subnetBasePow;
     uint64_t steps = start / subnetSize;
     auto subnetBase = steps * subnetSize;
 
@@ -85,7 +86,7 @@ std::pair<std::vector<Host>, std::vector<Subnet>> Range::decomposeToHostsAndSubn
     std::vector<Host> hosts{};
     std::vector<Subnet> subnets{};
 
-    auto saveIfExists = [&](auto& range){
+    auto saveIfExists = [&](auto&& range){
         if (range.has_value()) {
             if (range->getDistance() > 0) {
                 ranges.push_back(range.value());
