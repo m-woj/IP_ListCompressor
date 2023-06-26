@@ -1,7 +1,6 @@
 #include <atomic>
 #include <execution>
 #include <span>
-#include <atomic>
 
 #include "Compressor.hpp"
 #include "Host.hpp"
@@ -119,7 +118,7 @@ void combine(std::vector<Range>& ranges) {
     auto next = ranges.begin() + 1;
     const auto length = ranges.size() - 1;
 
-    for (size_t i = 0 ; i < length ; i++) {
+    for (size_t i = 0 ; i < ranges.size() ; i++) {
         if (current->overlaps(*next)) {
             next++;
         }
@@ -132,6 +131,11 @@ void combine(std::vector<Range>& ranges) {
             current = next;
             next++;
         }
+    }
+
+    //If current overlapped to the end then must be added
+    if (checked.end()->getLastHost().to_uint() != current->getLastHost().to_uint()) {
+        checked.push_back(*current);
     }
 
     checked.shrink_to_fit();
@@ -160,7 +164,7 @@ void toRanges(std::vector<Host>& hosts, std::vector<Range>& ranges) {
 
     auto start = hosts.begin();
     auto end = start;
-    for (size_t i = 1; i < hosts.size() ; i++) {
+    for (size_t i = 1; i < hosts.size() + 1; i++) {
         auto&& currentValue = end->to_uint();
         auto&& nextValue = (end + 1)->to_uint();
         if (currentValue == nextValue - 1) {
