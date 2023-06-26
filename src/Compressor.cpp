@@ -116,7 +116,6 @@ void combine(std::vector<Range>& ranges) {
 
     auto current = ranges.begin();
     auto next = ranges.begin() + 1;
-    const auto length = ranges.size() - 1;
 
     for (size_t i = 0 ; i < ranges.size() ; i++) {
         if (current->overlaps(*next)) {
