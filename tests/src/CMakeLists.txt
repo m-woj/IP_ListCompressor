@@ -9,7 +9,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(${PROJECT_NAME} TestRawRecordsRecognizer.cpp TestRecordsProducer.cpp TestRange.cpp)
+add_executable(${PROJECT_NAME} TestRawRecordsRecognizer.cpp TestRecordsProducer.cpp TestRange.cpp TestCompressor.cpp)
 
 target_link_libraries(${PROJECT_NAME} GTest::gtest_main)
 
