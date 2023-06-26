@@ -132,7 +132,7 @@ void combine(std::vector<Range>& ranges) {
         }
     }
 
-    //If current overlapped to the end then must be added
+    //If current overlaps to the end then must be added here
     if (checked.end()->getLastHost().to_uint() != current->getLastHost().to_uint()) {
         checked.push_back(*current);
     }
