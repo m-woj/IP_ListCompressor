@@ -2,6 +2,7 @@
 #include <execution>
 #include <span>
 #include <future>
+#include <numeric>
 
 #include "BS_thread_pool.hpp"
 
@@ -128,6 +129,13 @@ void combine(std::vector<Range>& ranges) {
     auto&& outputs = multiFuture.get();
 
     std::vector<Range> checked;
+    auto numOfRanges = std::accumulate(
+            outputs.begin(), outputs.end(), 0ul,
+            [](auto accumulator, auto& output){
+        return accumulator + output.size();
+    });
+
+    checked.reserve(numOfRanges);
     merge(outputs, checked);
     ranges = checked;
 }
@@ -140,6 +148,7 @@ void toRanges(std::vector<Subnet>& subnets, std::vector<Range>& ranges) {
                 Host(subnet.to_uint()),
                 Host(subnet.broadcast_to_uint()));
     }
+
     subnets.clear();
 }
 
@@ -161,6 +170,7 @@ void toRanges(std::vector<Host>& hosts, std::vector<Range>& ranges) {
     auto&& outputs = multiFuture.get();
 
     merge(outputs, ranges);
+
     hosts.clear();
 }
 
@@ -195,6 +205,7 @@ std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_
 
     if (numOfHosts < 2) {
         ranges.emplace_back(hosts.at(chunkStart), hosts.at(chunkStart));
+
         return ranges;
     }
 
