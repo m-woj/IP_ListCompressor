@@ -35,6 +35,21 @@ auto test = [](auto& content, auto& expectedHosts, auto& expectedSubnets){
 TEST(TestCompressor, testCompressor) {
     {
         std::string content = "10.10.10.1\n"
+                              "10.10.10.2\n"
+                              "10.10.10.3\n"
+                              "10.10.10.0\n"
+                              "10.10.10.4\n"
+                              "10.10.10.5\n"
+                              "12.33.33.33";
+
+        std::vector<Host> expectedHosts = {Host("12.33.33.33"sv)};
+        std::vector<Subnet> expectedSubnets = {Subnet("10.10.10.0/30"sv), Subnet("10.10.10.4/31"sv)};
+
+        test(content, expectedHosts, expectedSubnets);
+    }
+
+    {
+        std::string content = "10.10.10.1\n"
                               "100.100.100.\n"
                               "10.10.10.10-10.10.10.100\n"
                               "10.10.10.100/28\n"
@@ -74,4 +89,5 @@ TEST(TestCompressor, testCompressor) {
 
         test(content, expectedHosts, expectedSubnets);
     }
+
 }
