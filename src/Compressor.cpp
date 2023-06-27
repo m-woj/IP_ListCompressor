@@ -242,7 +242,7 @@ std::vector<Range> combineChunkOfRanges(std::vector<Range> &ranges, uint32_t sta
     combinedRanges.reserve(numOfRanges);
 
     auto current = ranges.begin() + start;
-    auto next = ranges.begin() + 1;
+    auto next = current + 1;
 
     for (size_t i = start ; i < end ; i++) {
         if (current->overlaps(*next)) {
