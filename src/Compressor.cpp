@@ -63,9 +63,44 @@ auto combineChunkOfRanges = [](auto& ranges, const uint32_t start, const uint32_
     }
 
     combinedRanges.shrink_to_fit();
+
     return combinedRanges;
 };
 
+
+auto convertChunkOfHostsToRanges = [](auto& hosts, const uint32_t chunkStart, const uint32_t chunkEnd){
+    std::vector<Range> ranges;
+    auto numOfHosts = chunkEnd - chunkStart;
+    ranges.reserve(numOfHosts);
+
+    if (numOfHosts < 2) {
+        ranges.emplace_back(hosts.at(chunkStart), hosts.at(chunkStart));
+        return ranges;
+    }
+
+    auto start = hosts.begin() + chunkStart;
+    auto end = start;
+
+    for (size_t i = chunkStart + 1; i < chunkEnd + 1; i++) {
+        auto&& currentValue = end->to_uint();
+        auto&& nextValue = (end + 1)->to_uint();
+        if (currentValue == nextValue - 1) {
+            end++;
+        }
+        else {
+            ranges.emplace_back(*start, *end);
+            start = ++end;
+        }
+    }
+
+    if ((*end == hosts.at(chunkEnd)) && ((end != start))) {
+        ranges.emplace_back(*start, *end);
+    }
+
+    return ranges;
+};
+
+void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& ranges);
 
 void removeHostsDuplicates(std::vector<Host>& hosts);
 void removeSubnetsDuplicates(std::vector<Subnet>& subnets);
@@ -141,7 +176,7 @@ void decomposeRangesToHostsAndSubnets(
     std::for_each(hostsAndSubnets.begin(), hostsAndSubnets.end(), [&](auto& data){
                 hosts.insert(hosts.end(), data.first.begin(), data.first.end());
                 subnets.insert(subnets.end(), data.second.begin(), data.second.end());
-            });
+    });
 }
 
 
@@ -161,29 +196,7 @@ void combine(std::vector<Range>& ranges) {
     auto&& outputs = multiFuture.get();
 
     std::vector<Range> checked;
-    checked.reserve(ranges.size());
-
-    checked.insert(checked.end(), outputs.begin()->begin(), outputs.begin()->end());
-    std::for_each(outputs.begin() + 1, outputs.end(), [&checked](auto&& output){
-        auto&& previousRange = checked.back();
-        auto&& nextRange = output.begin();
-        if (previousRange.overlaps(*nextRange)) {
-            nextRange++;
-        }
-        else if (previousRange.touches(*nextRange)) {
-            previousRange.setLastHost(output.begin()->getLastHost());
-            nextRange++;
-        }
-
-        //There was only one element in output and was overlapped/touched
-        if (nextRange == output.end()) {
-            return;
-        }
-
-        checked.insert(checked.end(), nextRange, output.end());
-    });
-
-    checked.shrink_to_fit();
+    merge(outputs, checked);
     ranges = checked;
 }
 
@@ -207,23 +220,37 @@ void toRanges(std::vector<Host>& hosts, std::vector<Range>& ranges) {
     std::sort(std::execution::par,
               hosts.begin(), hosts.end());
 
-    auto start = hosts.begin();
-    auto end = start;
-    for (size_t i = 1; i < hosts.size() + 1; i++) {
-        auto&& currentValue = end->to_uint();
-        auto&& nextValue = (end + 1)->to_uint();
-        if (currentValue == nextValue - 1) {
-            end++;
-        }
-        else {
-            ranges.emplace_back(*start, *end);
-            start = ++end;
-        }
-    }
+    auto convertToRanges = [&hosts](const uint32_t start, const uint32_t end){
+        return convertChunkOfHostsToRanges(hosts, start, end);
+    };
 
-    if ((end == hosts.end() - 1) && ((end != start))) {
-        ranges.emplace_back(*start, *end);
-    }
+    BS::thread_pool pool{};
+    auto multiFuture = pool.parallelize_loop(hosts.size(), convertToRanges);
+    auto&& outputs = multiFuture.get();
 
+    merge(outputs, ranges);
     hosts.clear();
+}
+
+
+void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& ranges) {
+    ranges.insert(ranges.end(), newRanges.begin()->begin(), newRanges.begin()->end());
+    std::for_each(newRanges.begin() + 1, newRanges.end(), [&ranges](auto&& output){
+        auto&& previousRange = ranges.back();
+        auto&& nextRange = output.begin();
+        if (previousRange.overlaps(*nextRange)) {
+            nextRange++;
+        }
+        else if (previousRange.touches(*nextRange)) {
+            previousRange.setLastHost(output.begin()->getLastHost());
+            nextRange++;
+        }
+
+        //There was only one element in output and was overlapped/touched
+        if (nextRange == output.end()) {
+            return;
+        }
+
+        ranges.insert(ranges.end(), nextRange, output.end());
+    });
 }
