@@ -30,76 +30,8 @@ void removeDuplicates(std::vector<RecordT> &records) {
 }
 
 
-auto combineChunkOfRanges = [](auto& ranges, const uint32_t start, const uint32_t end){
-    auto&& numOfRanges = end - start;
-    if (numOfRanges < 2) {
-        return std::vector<Range>{ranges.at(start)};
-    }
-
-    std::vector<Range> combinedRanges;
-    combinedRanges.reserve(numOfRanges);
-
-    auto current = ranges.begin() + start;
-    auto next = ranges.begin() + 1;
-
-    for (size_t i = start ; i < end ; i++) {
-        if (current->overlaps(*next)) {
-            next++;
-        }
-        else if (current->touches(*next)) {
-            current->setLastHost(next->getLastHost());
-            next++;
-        }
-        else {
-            combinedRanges.push_back(*current);
-            current = next;
-            next++;
-        }
-    }
-
-    //If current overlaps to the end then must be added here
-    if (combinedRanges.end()->getLastHost().to_uint() != current->getLastHost().to_uint()) {
-        combinedRanges.push_back(*current);
-    }
-
-    combinedRanges.shrink_to_fit();
-
-    return combinedRanges;
-};
-
-
-auto convertChunkOfHostsToRanges = [](auto& hosts, const uint32_t chunkStart, const uint32_t chunkEnd){
-    std::vector<Range> ranges;
-    auto numOfHosts = chunkEnd - chunkStart;
-    ranges.reserve(numOfHosts);
-
-    if (numOfHosts < 2) {
-        ranges.emplace_back(hosts.at(chunkStart), hosts.at(chunkStart));
-        return ranges;
-    }
-
-    auto start = hosts.begin() + chunkStart;
-    auto end = start;
-
-    for (size_t i = chunkStart + 1; i < chunkEnd + 1; i++) {
-        auto&& currentValue = end->to_uint();
-        auto&& nextValue = (end + 1)->to_uint();
-        if (currentValue == nextValue - 1) {
-            end++;
-        }
-        else {
-            ranges.emplace_back(*start, *end);
-            start = ++end;
-        }
-    }
-
-    if ((*end == hosts.at(chunkEnd)) && ((end != start))) {
-        ranges.emplace_back(*start, *end);
-    }
-
-    return ranges;
-};
-
+std::vector<Range> combineChunkOfRanges(std::vector<Range>& ranges, uint32_t chunkStart, uint32_t chunkEnd);
+std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_t chunkStart, uint32_t chunkEnd);
 void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& ranges);
 
 void removeHostsDuplicates(std::vector<Host>& hosts);
@@ -253,4 +185,75 @@ void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& range
 
         ranges.insert(ranges.end(), nextRange, output.end());
     });
+}
+
+
+std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_t chunkStart, uint32_t chunkEnd) {
+    std::vector<Range> ranges;
+    auto numOfHosts = chunkEnd - chunkStart;
+    ranges.reserve(numOfHosts);
+
+    if (numOfHosts < 2) {
+        ranges.emplace_back(hosts.at(chunkStart), hosts.at(chunkStart));
+        return ranges;
+    }
+
+    auto start = hosts.begin() + chunkStart;
+    auto end = start;
+
+    for (size_t i = chunkStart + 1; i < chunkEnd + 1; i++) {
+        auto&& currentValue = end->to_uint();
+        auto&& nextValue = (end + 1)->to_uint();
+        if (currentValue == nextValue - 1) {
+            end++;
+        }
+        else {
+            ranges.emplace_back(*start, *end);
+            start = ++end;
+        }
+    }
+
+    if ((*end == hosts.at(chunkEnd)) && ((end != start))) {
+        ranges.emplace_back(*start, *end);
+    }
+
+    return ranges;
+}
+
+
+std::vector<Range> combineChunkOfRanges(std::vector<Range> &ranges, uint32_t start, uint32_t end) {
+    auto&& numOfRanges = end - start;
+    if (numOfRanges < 2) {
+        return std::vector<Range>{ranges.at(start)};
+    }
+
+    std::vector<Range> combinedRanges;
+    combinedRanges.reserve(numOfRanges);
+
+    auto current = ranges.begin() + start;
+    auto next = ranges.begin() + 1;
+
+    for (size_t i = start ; i < end ; i++) {
+        if (current->overlaps(*next)) {
+            next++;
+        }
+        else if (current->touches(*next)) {
+            current->setLastHost(next->getLastHost());
+            next++;
+        }
+        else {
+            combinedRanges.push_back(*current);
+            current = next;
+            next++;
+        }
+    }
+
+    //If current overlaps to the end then must be added here
+    if (combinedRanges.end()->getLastHost().to_uint() != current->getLastHost().to_uint()) {
+        combinedRanges.push_back(*current);
+    }
+
+    combinedRanges.shrink_to_fit();
+
+    return combinedRanges;
 }
