@@ -32,6 +32,34 @@ auto test = [](auto& content, auto& expectedHosts, auto& expectedSubnets){
 };
 
 
+TEST(TestCompressor, testMergingRanges) {
+    {
+        std::string content = "10.50.0.0/16\n"
+                              "10.10.0.0/24\n"
+                              "10.10.1.0/24\n"
+                              "10.10.2.0/24\n"
+                              "10.10.3.0/24\n"
+                              "10.10.4.0/24\n"
+                              "10.10.5.0/24\n"
+                              "10.10.6.0/24\n"
+                              "10.10.7.0/24\n"
+                              "10.10.8.0/24\n"
+                              "10.10.9.0/24\n"
+                              "10.10.10.0/24\n"
+                              "10.10.11.0/24\n"
+                              "10.10.12.0/24\n"
+                              "10.10.13.0/24\n"
+                              "10.10.14.0/24\n"
+                              "10.10.15.0/24\n";
+
+        std::vector<Host> expectedHosts = {};
+        std::vector<Subnet> expectedSubnets = {Subnet("10.50.0.0/16"), Subnet("10.10.0.0/20"sv)};
+
+        test(content, expectedHosts, expectedSubnets);
+    }
+}
+
+
 TEST(TestCompressor, testCompressor) {
     {
         std::string content = "10.10.10.1\n"
