@@ -1,6 +1,9 @@
 #include <atomic>
 #include <execution>
 #include <span>
+#include <future>
+
+#include "BS_thread_pool.hpp"
 
 #include "Compressor.hpp"
 #include "Host.hpp"
@@ -27,8 +30,45 @@ void removeDuplicates(std::vector<RecordT> &records) {
 }
 
 
-void removeDuplicates(std::vector<Host>& hosts);
-void removeDuplicates(std::vector<Subnet>& subnets);
+auto combineChunkOfRanges = [](auto& ranges, const uint32_t start, const uint32_t end){
+    auto&& numOfRanges = end - start;
+    if (numOfRanges < 2) {
+        return std::vector<Range>{ranges.at(start)};
+    }
+
+    std::vector<Range> combinedRanges;
+    combinedRanges.reserve(numOfRanges);
+
+    auto current = ranges.begin() + start;
+    auto next = ranges.begin() + 1;
+
+    for (size_t i = start ; i < end ; i++) {
+        if (current->overlaps(*next)) {
+            next++;
+        }
+        else if (current->touches(*next)) {
+            current->setLastHost(next->getLastHost());
+            next++;
+        }
+        else {
+            combinedRanges.push_back(*current);
+            current = next;
+            next++;
+        }
+    }
+
+    //If current overlaps to the end then must be added here
+    if (combinedRanges.end()->getLastHost().to_uint() != current->getLastHost().to_uint()) {
+        combinedRanges.push_back(*current);
+    }
+
+    combinedRanges.shrink_to_fit();
+    return combinedRanges;
+};
+
+
+void removeHostsDuplicates(std::vector<Host>& hosts);
+void removeSubnetsDuplicates(std::vector<Subnet>& subnets);
 
 void combine(std::vector<Range>& ranges);
 
@@ -45,8 +85,9 @@ Compressor::Compressor(const std::vector<std::string_view> &rawRecords) : Record
 
 
 void Compressor::compressRecords() {
-    removeDuplicates(hosts);
-    removeDuplicates(subnets);
+    auto thread = std::thread(removeHostsDuplicates, std::ref(hosts));
+    removeSubnetsDuplicates(subnets);
+    thread.join();
 
     toRanges(hosts, ranges);
     toRanges(subnets, ranges);
@@ -58,7 +99,7 @@ void Compressor::compressRecords() {
 }
 
 
-void removeDuplicates(std::vector<Host>& hosts) {
+void removeHostsDuplicates(std::vector<Host>& hosts) {
     struct hashFunc
     {
         std::size_t operator () (Host const &host) const
@@ -71,7 +112,7 @@ void removeDuplicates(std::vector<Host>& hosts) {
 }
 
 
-void removeDuplicates(std::vector<Subnet>& subnets) {
+void removeSubnetsDuplicates(std::vector<Subnet>& subnets) {
     struct hashFunc
     {
         std::size_t operator () (Subnet const &subnet) const
@@ -111,31 +152,36 @@ void combine(std::vector<Range>& ranges) {
 
     std::sort(std::execution::par,ranges.begin(), ranges.end());
 
+    auto combineChunk = [&ranges](const uint32_t start, const uint32_t end){
+        return combineChunkOfRanges(ranges, start, end);
+    };
+
+    BS::thread_pool pool{};
+    auto multiFuture = pool.parallelize_loop(ranges.size(), combineChunk);
+    auto&& outputs = multiFuture.get();
+
     std::vector<Range> checked;
     checked.reserve(ranges.size());
 
-    auto current = ranges.begin();
-    auto next = ranges.begin() + 1;
+    checked.insert(checked.end(), outputs.begin()->begin(), outputs.begin()->end());
+    std::for_each(outputs.begin() + 1, outputs.end(), [&checked](auto&& output){
+        auto&& previousRange = checked.back();
+        auto&& nextRange = output.begin();
+        if (previousRange.overlaps(*nextRange)) {
+            nextRange++;
+        }
+        else if (previousRange.touches(*nextRange)) {
+            previousRange.setLastHost(output.begin()->getLastHost());
+            nextRange++;
+        }
 
-    for (size_t i = 0 ; i < ranges.size() ; i++) {
-        if (current->overlaps(*next)) {
-            next++;
+        //There was only one element in output and was overlapped/touched
+        if (nextRange == output.end()) {
+            return;
         }
-        else if (current->touches(*next)) {
-            current->setLastHost(next->getLastHost());
-            next++;
-        }
-        else {
-            checked.push_back(*current);
-            current = next;
-            next++;
-        }
-    }
 
-    //If current overlaps to the end then must be added here
-    if (checked.end()->getLastHost().to_uint() != current->getLastHost().to_uint()) {
-        checked.push_back(*current);
-    }
+        checked.insert(checked.end(), nextRange, output.end());
+    });
 
     checked.shrink_to_fit();
     ranges = checked;
