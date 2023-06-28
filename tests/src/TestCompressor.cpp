@@ -32,9 +32,17 @@ auto test = [](auto& content, auto& expectedHosts, auto& expectedSubnets){
 };
 
 
-TEST(TestCompressor, testMerge) {
-
-}
+//TEST(TestCompressor, testMerge) {
+//    std::vector<Range> ranges{};
+//    std::vector<std::vector<Range>> newRanges{
+//            {Range("10.10.10.10-10.10.10.23"), Range("10.10.10.25-10.10.10.26")},
+//            {Range("10.10.10.27-10.10.10.30"), Range("10.10.10.33-10.10.10.35")},
+//            {Range("10.10.10.37-10.10.10.39"), Range("10.10.10.41-10.10.10.55")}
+//    };
+//
+//    merge(newRanges, ranges);
+//    ASSERT_EQ(ranges.size(), 6);
+//}
 
 
 TEST(TestCompressor, testMergingHosts) {

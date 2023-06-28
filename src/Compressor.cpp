@@ -167,7 +167,7 @@ void toRanges(std::vector<Host>& hosts, std::vector<Range>& ranges) {
 
     BS::thread_pool pool{};
     auto multiFuture = pool.parallelize_loop(hosts.size(), convertToRanges);
-    auto&& outputs = multiFuture.get();
+    auto outputs = multiFuture.get();
 
     merge(outputs, ranges);
 
@@ -176,31 +176,36 @@ void toRanges(std::vector<Host>& hosts, std::vector<Range>& ranges) {
 
 
 void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& ranges) {
-    ranges.insert(ranges.end(), newRanges.begin()->begin(), newRanges.begin()->end());
+    std::erase_if(newRanges, [](auto& newRange){
+        return newRange.empty();
+    });
+
+    ranges.insert(ranges.end(), newRanges.front().begin(), newRanges.front().end());
+
     std::for_each(newRanges.begin() + 1, newRanges.end(), [&ranges](auto&& output){
-        auto&& previousRange = ranges.back();
-        auto&& nextRange = output.begin();
-        if (previousRange.overlaps(*nextRange)) {
-            nextRange++;
+        auto previousRange = ranges.end();
+        auto currentRange = output.begin();
+        if (previousRange->overlaps(*currentRange)) {
+            currentRange++;
         }
-        else if (previousRange.touches(*nextRange)) {
-            previousRange.setLastHost(output.begin()->getLastHost());
-            nextRange++;
+        else if (previousRange->touches(*currentRange)) {
+            previousRange->setLastHost(currentRange->getLastHost());
+            currentRange++;
         }
 
         //There was only one element in output and was overlapped/touched
-        if (nextRange == output.end()) {
+        if (currentRange == output.end()) {
             return;
         }
 
-        ranges.insert(ranges.end(), nextRange, output.end());
+        ranges.insert(ranges.end(), currentRange, output.end());
     });
 }
 
 
 std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_t chunkStart, uint32_t chunkEnd) {
     std::vector<Range> ranges;
-    auto numOfHosts = chunkEnd - chunkStart;
+    auto numOfHosts = chunkEnd - chunkStart + 1;
     ranges.reserve(numOfHosts);
 
     if (numOfHosts < 2) {
@@ -211,22 +216,35 @@ std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_
 
     auto start = hosts.begin() + chunkStart;
     auto end = start;
+    auto last = hosts.begin() + chunkEnd - 1;
 
-    for (size_t i = 0 ; i < numOfHosts; i++) {
-        auto&& currentValue = end->to_uint();
-        auto&& nextValue = (end + 1)->to_uint();
-        if (currentValue == nextValue - 1) {
-            end++;
-        }
-        else {
-            ranges.emplace_back(*start, *end);
-            start = ++end;
+    while (end != last) {
+        end++;
+        if (end->to_uint() != (end - 1)->to_uint() + 1) {
+           ranges.emplace_back(*start, *(end - 1));
+           start = end;
         }
     }
 
-    if ((end == hosts.begin() + chunkEnd - 1) && ((end != start))) {
+    if (start != (end - 1)) {
         ranges.emplace_back(*start, *end);
     }
+
+//    for (size_t i = 0 ; i <= numOfHosts ; i++) {
+//        auto&& currentValue = end->to_uint();
+//        auto&& nextValue = (end + 1)->to_uint();
+//        if (currentValue == nextValue - 1) {
+//            end++;
+//        }
+//        else {
+//            ranges.emplace_back(*start, *end);
+//            start = ++end;
+//        }
+//    }
+//
+//    if ((end == hosts.begin() + chunkEnd) && ((end != start))) {
+//        ranges.emplace_back(*start, *end);
+//    }
 
     return ranges;
 }
