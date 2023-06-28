@@ -212,7 +212,7 @@ std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_
     auto start = hosts.begin() + chunkStart;
     auto end = start;
 
-    for (size_t i = chunkStart ; i < chunkEnd ; i++) {
+    for (size_t i = 0 ; i < numOfHosts; i++) {
         auto&& currentValue = end->to_uint();
         auto&& nextValue = (end + 1)->to_uint();
         if (currentValue == nextValue - 1) {
@@ -224,7 +224,7 @@ std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_
         }
     }
 
-    if ((*end == hosts.at(chunkEnd - 1)) && ((end != start))) {
+    if ((end == hosts.begin() + chunkEnd - 1) && ((end != start))) {
         ranges.emplace_back(*start, *end);
     }
 
