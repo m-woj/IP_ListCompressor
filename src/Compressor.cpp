@@ -205,7 +205,7 @@ void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& range
 
 std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_t chunkStart, uint32_t chunkEnd) {
     std::vector<Range> ranges;
-    auto numOfHosts = chunkEnd - chunkStart + 1;
+    auto numOfHosts = chunkEnd - chunkStart;
     ranges.reserve(numOfHosts);
 
     if (numOfHosts < 2) {
@@ -215,43 +215,32 @@ std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_
     }
 
     auto start = hosts.begin() + chunkStart;
-    auto end = start;
-    auto last = hosts.begin() + chunkEnd - 1;
+    auto end = start + 1;
+
+    const auto last = hosts.begin() + chunkEnd;
 
     while (end != last) {
-        end++;
-        if (end->to_uint() != (end - 1)->to_uint() + 1) {
-           ranges.emplace_back(*start, *(end - 1));
+        auto&& previous = end - 1;
+        if (end->to_uint() != previous->to_uint() + 1) {
+           ranges.emplace_back(*start, *previous);
            start = end;
         }
+        end++;
     }
 
-    if (start != (end - 1)) {
-        ranges.emplace_back(*start, *end);
+    // Current range overlaps to the end
+    if (start != last) {
+        ranges.emplace_back(*start, *(end-1));
     }
 
-//    for (size_t i = 0 ; i <= numOfHosts ; i++) {
-//        auto&& currentValue = end->to_uint();
-//        auto&& nextValue = (end + 1)->to_uint();
-//        if (currentValue == nextValue - 1) {
-//            end++;
-//        }
-//        else {
-//            ranges.emplace_back(*start, *end);
-//            start = ++end;
-//        }
-//    }
-//
-//    if ((end == hosts.begin() + chunkEnd) && ((end != start))) {
-//        ranges.emplace_back(*start, *end);
-//    }
+    ranges.shrink_to_fit();
 
     return ranges;
 }
 
 
 std::vector<Range> combineChunkOfRanges(std::vector<Range> &ranges, uint32_t start, uint32_t end) {
-    auto&& numOfRanges = end - start;
+    auto&& numOfRanges = end - start + 1;
     if (numOfRanges < 2) {
         return std::vector<Range>{ranges.at(start)};
     }

@@ -65,9 +65,10 @@ TEST(TestCompressor, testMergingHosts) {
                               "10.10.0.14\n"
                               "10.10.0.15\n"
                               "10.10.1.0\n"
-                              "10.10.1.1\n";
+                              "10.10.1.1\n"
+                              "10.10.10.10\n";
 
-        std::vector<Host> expectedHosts = {};
+        std::vector<Host> expectedHosts = {Host("10.10.10.10")};
         std::vector<Subnet> expectedSubnets = {Subnet("10.50.0.0/16"), Subnet("10.10.0.0/28"sv),
                                                Subnet("10.10.1.0/31"sv)};
 
