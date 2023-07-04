@@ -183,3 +183,19 @@ TEST(TestCompressor, testCompressor5) {
         test(content, expectedHosts, expectedSubnets);
     }
 }
+
+
+TEST(TestCompressor, testCompressor6) {
+    {
+        std::string content = "10.10.10.1\n"
+                              "10.10.10.10-10.10.10.100\n"
+                              "10.10.10.100/28\n"
+                              "10.10.10.44/24\n"
+                              "12.33.33.33";
+
+        std::vector<Host> expectedHosts = {Host("12.33.33.33"sv)};
+        std::vector<Subnet> expectedSubnets = {Subnet("10.10.10.0/24"sv)};
+
+        test(content, expectedHosts, expectedSubnets);
+    }
+}

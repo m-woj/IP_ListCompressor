@@ -34,6 +34,7 @@ void removeDuplicates(std::vector<RecordT> &records) {
 std::vector<Range> combineChunkOfRanges(std::vector<Range>& ranges, size_t chunkStart, size_t chunkEnd);
 std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, size_t chunkStart, size_t chunkEnd);
 void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& ranges);
+std::vector<Range> mergeCombinedChunksOfRanges(std::vector<std::vector<Range>>& chunks);
 
 void removeHostsDuplicates(std::vector<Host>& hosts);
 void removeSubnetsDuplicates(std::vector<Subnet>& subnets);
@@ -120,8 +121,15 @@ void combine(std::vector<Range>& ranges) {
 
     std::sort(std::execution::par,ranges.begin(), ranges.end());
 
-    //cannot be parallelized, yet...
-    ranges = combineChunkOfRanges(ranges, 0, ranges.size());
+    auto combineChunk = [&ranges](const uint32_t start, const uint32_t end){
+        return combineChunkOfRanges(ranges, start, end);
+    };
+
+    BS::thread_pool pool{};
+    auto multiFuture = pool.parallelize_loop(ranges.size(), combineChunk, 1);
+    auto&& outputs = multiFuture.get();
+
+    ranges = mergeCombinedChunksOfRanges(outputs);
 }
 
 
@@ -258,4 +266,37 @@ std::vector<Range> combineChunkOfRanges(std::vector<Range> &ranges, size_t start
     combinedRanges.shrink_to_fit();
 
     return combinedRanges;
+}
+
+
+std::vector<Range> mergeCombinedChunksOfRanges(std::vector<std::vector<Range>>& chunks) {
+    auto chunk = chunks.begin() + 1;
+    while (chunk != chunks.end()) {
+        //full overlap
+        if ((chunk - 1)->back().overlaps(chunk->back())) {
+            chunks.erase(chunk);
+        }
+        //partial overlap
+        else if ((chunk - 1)->back().getLastHost() >= chunk->begin()->getLastHost()) {
+            auto last = chunk->begin() + 1;
+            while ((chunk - 1)->back().getLastHost() >= last->getLastHost()) {
+                last++;
+            }
+            chunk->erase(chunk->begin(), last);
+        }
+        else {
+            chunk++;
+        }
+    }
+
+    std::vector<Range> combined;
+    auto numOfRanges = std::accumulate(
+            chunks.begin(), chunks.end(), 0ul,
+            [](auto accumulator, auto& output){
+                return accumulator + output.size();
+            });
+    combined.reserve(numOfRanges);
+
+    merge(chunks, combined);
+    return combined;
 }
