@@ -31,8 +31,8 @@ void removeDuplicates(std::vector<RecordT> &records) {
 }
 
 
-std::vector<Range> combineChunkOfRanges(std::vector<Range>& ranges, uint32_t chunkStart, uint32_t chunkEnd);
-std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_t chunkStart, uint32_t chunkEnd);
+std::vector<Range> combineChunkOfRanges(std::vector<Range>& ranges, size_t chunkStart, size_t chunkEnd);
+std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, size_t chunkStart, size_t chunkEnd);
 void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& ranges);
 
 void removeHostsDuplicates(std::vector<Host>& hosts);
@@ -120,24 +120,8 @@ void combine(std::vector<Range>& ranges) {
 
     std::sort(std::execution::par,ranges.begin(), ranges.end());
 
-    auto combineChunk = [&ranges](const uint32_t start, const uint32_t end){
-        return combineChunkOfRanges(ranges, start, end);
-    };
-
-    BS::thread_pool pool{};
-    auto multiFuture = pool.parallelize_loop(ranges.size(), combineChunk);
-    auto&& outputs = multiFuture.get();
-
-    std::vector<Range> checked;
-    auto numOfRanges = std::accumulate(
-            outputs.begin(), outputs.end(), 0ul,
-            [](auto accumulator, auto& output){
-        return accumulator + output.size();
-    });
-
-    checked.reserve(numOfRanges);
-    merge(outputs, checked);
-    ranges = checked;
+    //cannot be parallelized, yet...
+    ranges = combineChunkOfRanges(ranges, 0, ranges.size());
 }
 
 
@@ -203,7 +187,7 @@ void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& range
 }
 
 
-std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_t chunkStart, uint32_t chunkEnd) {
+std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, size_t chunkStart, size_t chunkEnd) {
     std::vector<Range> ranges;
     auto numOfHosts = chunkEnd - chunkStart;
     ranges.reserve(numOfHosts);
@@ -214,10 +198,10 @@ std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_
         return ranges;
     }
 
-    auto start = hosts.begin() + chunkStart;
+    auto start = hosts.begin() + static_cast<long>(chunkStart);
     auto end = start + 1;
 
-    const auto last = hosts.begin() + chunkEnd;
+    const auto last = hosts.begin() + static_cast<long>(chunkEnd);
 
     while (end != last) {
         auto&& previous = end - 1;
@@ -239,7 +223,7 @@ std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, uint32_
 }
 
 
-std::vector<Range> combineChunkOfRanges(std::vector<Range> &ranges, uint32_t start, uint32_t end) {
+std::vector<Range> combineChunkOfRanges(std::vector<Range> &ranges, size_t start, size_t end) {
     auto&& numOfRanges = end - start + 1;
     if (numOfRanges < 2) {
         return std::vector<Range>{ranges.at(start)};
@@ -248,7 +232,7 @@ std::vector<Range> combineChunkOfRanges(std::vector<Range> &ranges, uint32_t sta
     std::vector<Range> combinedRanges;
     combinedRanges.reserve(numOfRanges);
 
-    auto current = ranges.begin() + start;
+    auto current = ranges.begin() + static_cast<long>(start);
     auto next = current + 1;
 
     for (size_t i = start ; i < end ; i++) {
@@ -267,7 +251,7 @@ std::vector<Range> combineChunkOfRanges(std::vector<Range> &ranges, uint32_t sta
     }
 
     //If current overlaps to the end then must be added here
-    if (combinedRanges.end()->getLastHost().to_uint() != current->getLastHost().to_uint()) {
+    if (combinedRanges.back().getLastHost().to_uint() != current->getLastHost().to_uint()) {
         combinedRanges.push_back(*current);
     }
 
