@@ -298,5 +298,6 @@ std::vector<Range> mergeCombinedChunksOfRanges(std::vector<std::vector<Range>>& 
     combined.reserve(numOfRanges);
 
     merge(chunks, combined);
+
     return combined;
 }
