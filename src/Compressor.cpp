@@ -33,12 +33,12 @@ void removeDuplicates(std::vector<RecordT> &records) {
 
 std::vector<Range> combineChunkOfRanges(std::vector<Range>& ranges, size_t chunkStart, size_t chunkEnd);
 std::vector<Range> convertChunkOfHostsToRanges(std::vector<Host>& hosts, size_t chunkStart, size_t chunkEnd);
-void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& ranges);
 std::vector<Range> mergeCombinedChunksOfRanges(std::vector<std::vector<Range>>& chunks);
 
 void removeHostsDuplicates(std::vector<Host>& hosts);
 void removeSubnetsDuplicates(std::vector<Subnet>& subnets);
 
+void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& ranges);
 void combine(std::vector<Range>& ranges);
 
 void toRanges(std::vector<Subnet>& subnets, std::vector<Range>& ranges);
