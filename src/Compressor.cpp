@@ -183,7 +183,7 @@ void merge(std::vector<std::vector<Range>>& newRanges, std::vector<Range>& range
     ranges.insert(ranges.end(), newRanges.front().begin(), newRanges.front().end());
 
     std::for_each(newRanges.begin() + 1, newRanges.end(), [&ranges](auto&& output){
-        auto previousRange = ranges.end();
+        auto previousRange = ranges.end() - 1;
         auto currentRange = output.begin();
         if (previousRange->overlaps(*currentRange)) {
             currentRange++;

@@ -32,17 +32,17 @@ auto test = [](auto& content, auto& expectedHosts, auto& expectedSubnets){
 };
 
 
-//TEST(TestCompressor, testMerge) {
-//    std::vector<Range> ranges{};
-//    std::vector<std::vector<Range>> newRanges{
-//            {Range("10.10.10.10-10.10.10.23"), Range("10.10.10.25-10.10.10.26")},
-//            {Range("10.10.10.27-10.10.10.30"), Range("10.10.10.33-10.10.10.35")},
-//            {Range("10.10.10.37-10.10.10.39"), Range("10.10.10.41-10.10.10.55")}
-//    };
-//
-//    merge(newRanges, ranges);
-//    ASSERT_EQ(ranges.size(), 6);
-//}
+TEST(TestCompressor, testMerge) {
+    std::vector<Range> ranges{};
+    std::vector<std::vector<Range>> newRanges{
+            {Range("10.10.10.10-10.10.10.23"), Range("10.10.10.25-10.10.10.26")},
+            {Range("10.10.10.27-10.10.10.30"), Range("10.10.10.33-10.10.10.35")},
+            {Range("10.10.10.37-10.10.10.39"), Range("10.10.10.41-10.10.10.55")}
+    };
+
+    merge(newRanges, ranges);
+    ASSERT_EQ(ranges.size(), 5);
+}
 
 
 TEST(TestCompressor, testMergingHosts) {
@@ -77,7 +77,7 @@ TEST(TestCompressor, testMergingHosts) {
 }
 
 
-TEST(TestCompressor, testMergingRanges) {
+TEST(TestCompressor, testMergingHostsAndRanges) {
     {
         std::string content = "10.50.0.0/16\n"
                               "10.10.0.0/24\n"
@@ -112,7 +112,62 @@ TEST(TestCompressor, testMergingRanges) {
 }
 
 
-TEST(TestCompressor, testCompressor) {
+TEST(TestCompressor, testCompressor1) {
+    {
+        std::string content = "10.10.10.1/24\n";
+
+        std::vector<Host> expectedHosts = {};
+        std::vector<Subnet> expectedSubnets = {Subnet("10.10.10.0/24"sv)};
+
+        test(content, expectedHosts, expectedSubnets);
+    }
+
+}
+
+
+TEST(TestCompressor, testCompressor2) {
+    {
+        std::string content = "10.10.10.1\n"
+                              "100.100.100.\n"
+                              "10.10.10.10-10.10.10.100\n"
+                              "10.10.10.100/28\n"
+                              "10.10.10.44/24\n"
+                              "12.33.33.33";
+
+        std::vector<Host> expectedHosts = {Host("12.33.33.33"sv)};
+        std::vector<Subnet> expectedSubnets = {Subnet("10.10.10.0/24"sv)};
+
+        test(content, expectedHosts, expectedSubnets);
+    }
+}
+
+
+TEST(TestCompressor, testCompressor3) {
+    {
+        std::string content = "10.10.10.1\n";
+
+        std::vector<Host> expectedHosts = {Host("10.10.10.1"sv)};
+        std::vector<Subnet> expectedSubnets = {};
+
+        test(content, expectedHosts, expectedSubnets);
+    }
+}
+
+
+TEST(TestCompressor, testCompressor4) {
+    {
+        std::string content = "10.10.10.1/24\n"
+                              "10.10.10.50-10.10.11.0";
+
+        std::vector<Host> expectedHosts = {Host("10.10.11.0"sv)};
+        std::vector<Subnet> expectedSubnets = {Subnet("10.10.10.0/24"sv)};
+
+        test(content, expectedHosts, expectedSubnets);
+    }
+}
+
+
+TEST(TestCompressor, testCompressor5) {
     {
         std::string content = "10.10.10.1\n"
                               "10.10.10.2\n"
@@ -127,47 +182,4 @@ TEST(TestCompressor, testCompressor) {
 
         test(content, expectedHosts, expectedSubnets);
     }
-
-    {
-        std::string content = "10.10.10.1\n"
-                              "100.100.100.\n"
-                              "10.10.10.10-10.10.10.100\n"
-                              "10.10.10.100/28\n"
-                              "10.10.10.44/24\n"
-                              "12.33.33.33";
-
-        std::vector<Host> expectedHosts = {Host("12.33.33.33"sv)};
-        std::vector<Subnet> expectedSubnets = {Subnet("10.10.10.0/24"sv)};
-
-        test(content, expectedHosts, expectedSubnets);
-    }
-
-    {
-        std::string content = "10.10.10.1\n";
-
-        std::vector<Host> expectedHosts = {Host("10.10.10.1"sv)};
-        std::vector<Subnet> expectedSubnets = {};
-
-        test(content, expectedHosts, expectedSubnets);
-    }
-
-    {
-        std::string content = "10.10.10.1/24\n"
-                              "10.10.10.50-10.10.11.0";
-
-        std::vector<Host> expectedHosts = {Host("10.10.11.0"sv)};
-        std::vector<Subnet> expectedSubnets = {Subnet("10.10.10.0/24"sv)};
-
-        test(content, expectedHosts, expectedSubnets);
-    }
-
-    {
-        std::string content = "10.10.10.1/24\n";
-
-        std::vector<Host> expectedHosts = {};
-        std::vector<Subnet> expectedSubnets = {Subnet("10.10.10.0/24"sv)};
-
-        test(content, expectedHosts, expectedSubnets);
-    }
-
 }
