@@ -199,3 +199,30 @@ TEST(TestCompressor, testCompressor6) {
         test(content, expectedHosts, expectedSubnets);
     }
 }
+
+
+TEST(TestCompressor, testMergeCombinedChunksOfRanges1) {
+    std::vector<std::vector<Range>> chunks = {
+            {Range("0.0.0.0-0.0.0.10"), Range("0.0.0.15-0.0.0.20"), Range("0.0.0.25-0.0.0.100")},
+            {Range("0.0.0.30-0.0.0.40"), Range("0.0.0.110-0.0.0.140")},
+    };
+
+    auto ranges = mergeCombinedChunksOfRanges(chunks);
+
+    ASSERT_EQ(ranges.size(), 4);
+
+}
+
+
+TEST(TestCompressor, testMergeCombinedChunksOfRanges2) {
+    std::vector<std::vector<Range>> chunks = {
+            {Range("0.0.0.0-0.0.0.10"), Range("0.0.0.15-0.0.0.20"), Range("0.0.0.25-0.0.0.100")},
+            {Range("0.0.0.30-0.0.0.40"), Range("0.0.0.50-0.0.0.70")},
+            {Range("0.0.0.80-0.0.0.85"), Range("0.0.0.90-0.0.0.95")},
+    };
+
+    auto ranges = mergeCombinedChunksOfRanges(chunks);
+
+    ASSERT_EQ(ranges.size(), 3);
+
+}
