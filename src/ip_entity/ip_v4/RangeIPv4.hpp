@@ -9,9 +9,7 @@
 
 class RangeIPv4: public RangeAbstract<uint32_t, std::string> {
 public:
-    static RangeIPv4 createFromEdgeValues(uint32_t firstValue, uint32_t lastValue) {
-        return {firstValue, lastValue};
-    }
+    static RangeIPv4 createFromEdgeValues(uint32_t firstValue, uint32_t lastValue);
 
     std::string getAsText() override;
 

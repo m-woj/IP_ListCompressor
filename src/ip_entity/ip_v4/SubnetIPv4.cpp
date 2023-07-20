@@ -4,7 +4,7 @@
 
 
 SubnetIPv4::SubnetIPv4(uint32_t firstValue, uint32_t maskValue):
-    RangeIPv4(firstValue, firstValue) {
+    RangeIPv4(firstValue, firstValue), maskLength() {
     this->lastValue = AddressTransformer::getLastValueFromFirstAndMaskValue(firstValue, maskValue);
     this->maskLength = AddressTransformer::getMaskLengthFromValue(maskValue);
 }
