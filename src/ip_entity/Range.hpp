@@ -11,4 +11,7 @@ public:
     virtual SizeT getLastValue() = 0;
 
     virtual void setLastValue(SizeT value) = 0;
+
+protected:
+    virtual ~Range() = 0;
 };

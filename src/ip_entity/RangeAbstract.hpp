@@ -25,5 +25,7 @@ public:
     TextT getAsText() override = 0;
 
 protected:
-    RangeAbstract(SizeT first, SizeT last): firstValue(first), lastValue(last) {};
+    RangeAbstract(SizeT firstValue, SizeT lastValue): firstValue(firstValue), lastValue(lastValue) {};
+
+    ~RangeAbstract() override = 0;
 };
