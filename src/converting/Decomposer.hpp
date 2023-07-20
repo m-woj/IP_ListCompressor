@@ -1,9 +1,13 @@
 #pragma once
 
-#include "Converter.hpp"
+
+#include "ConvertingStrategy.hpp"
 
 
-template<class ContainerT, class StringT>
-class Decomposer: public Converter<ContainerT> {
-
+template<class ContainerT>
+class Decomposer: public ConvertingStrategy<ContainerT> {
+public:
+    ContainerT convert(ContainerT& input) {
+        return {};
+    }
 };

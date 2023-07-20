@@ -1,9 +1,12 @@
 #pragma once
 
-#include "Converter.hpp"
+
+#include "ConvertingStrategy.hpp"
 
 
-template<class ContainerT, class StringT>
-class Purifier: public Converter<ContainerT> {
-
+template<class ContainerT>
+class Purifier: public ConvertingStrategy<ContainerT> {
+    ContainerT convert(ContainerT& input) {
+        return {};
+    }
 };
