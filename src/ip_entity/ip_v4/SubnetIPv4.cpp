@@ -1,18 +1,17 @@
 #include <cassert>
-#include "SubnetIPv4.hpp"
 
-#include "AddressTransformerIPv4.hpp"
+#include "SubnetIPv4.hpp"
 
 
 SubnetIPv4::SubnetIPv4(uint32_t firstValue, uint32_t subnetSize):
     RangeIPv4(firstValue, firstValue), maskLength() {
-    this->lastValue = AddressTransformerIPv4::getLastValueFromFirstValueAndSubnetSize(firstValue, subnetSize);
-    this->maskLength = AddressTransformerIPv4::getMaskLengthFromSubnetSize(subnetSize);
+    this->lastValue = transformer.getLastValueFromFirstValueAndSubnetSize(firstValue, subnetSize);
+    this->maskLength = transformer.getMaskLengthFromSubnetSize(subnetSize);
 }
 
 SubnetIPv4::SubnetIPv4(uint32_t firstValue, uint32_t subnetSize, uint8_t maskLength):
     RangeIPv4(firstValue, firstValue), maskLength(maskLength) {
-    this->lastValue = AddressTransformerIPv4::getLastValueFromFirstValueAndSubnetSize(firstValue, subnetSize);
+    this->lastValue = transformer.getLastValueFromFirstValueAndSubnetSize(firstValue, subnetSize);
 }
 
 
@@ -32,7 +31,7 @@ SubnetIPv4 SubnetIPv4::unsafeCreateFromFirstValueAndSubnetSize(uint32_t firstVal
 }
 
 SubnetIPv4 SubnetIPv4::createFromFirstValueAndMaskLength(uint32_t firstValue, uint8_t maskLength) {
-    auto maskValue = AddressTransformerIPv4::getSubnetSizeFromMaskLength(maskLength);
+    auto maskValue = transformer.getSubnetSizeFromMaskLength(maskLength);
     firstValue = getValidFirstValue(firstValue, maskValue);
     return {firstValue, maskValue, maskLength};
 }
@@ -44,5 +43,5 @@ uint32_t getValidFirstValue(uint32_t firstValue, uint32_t maskValue) {
 
 
 std::string SubnetIPv4::getAsText() {
-    return AddressTransformerIPv4::getStringFromValue(firstValue) + "/" + std::to_string(maskLength);
+    return transformer.getStringFromValue(firstValue) + "/" + std::to_string(maskLength);
 }

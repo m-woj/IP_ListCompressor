@@ -2,8 +2,10 @@
 
 #include <cstdint>
 
+#include "../AddressPredicator.hpp"
 
-class AddressPredicator {
+
+class AddressPredicatorIPv4 : AddressPredicator<uint32_t> {
 public:
-    static bool isValidSubnetSize(uint32_t subnetSize);
+    bool isValidSubnetSize(uint32_t subnetSize) override;
 };
