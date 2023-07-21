@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Range.hpp"
+#include "AddressTransformer.hpp"
+#include "AddressPredicator.hpp"
 
 
 template<class SizeT, class TextT>
@@ -8,6 +10,9 @@ class RangeAbstract: public Range<SizeT, TextT> {
 protected:
     SizeT firstValue;
     SizeT lastValue;
+
+    static AddressTransformer<SizeT> transformer;
+    static AddressPredicator<SizeT> predicator;
 
 public:
     SizeT getFirstValue() override {

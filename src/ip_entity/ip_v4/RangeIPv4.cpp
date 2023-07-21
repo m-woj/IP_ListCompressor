@@ -1,17 +1,17 @@
 #include "RangeIPv4.hpp"
-#include "AddressTransformer.hpp"
+#include "AddressTransformerIPv4.hpp"
 
 #define RANGE_DELIMITER_SIGN "-"
 
 
 std::string RangeIPv4::getAsText() {
-    return AddressTransformer::getStringFormFromValue(firstValue) +
+    return AddressTransformerIPv4::getStringFromValue(firstValue) +
            RANGE_DELIMITER_SIGN +
-           AddressTransformer::getStringFormFromValue(lastValue);
+           AddressTransformerIPv4::getStringFromValue(lastValue);
 }
 
 
-RangeIPv4 RangeIPv4::createFromEdgeValues(uint32_t firstValue, uint32_t lastValue) {
+RangeIPv4 RangeIPv4::createFromFirstAndLastValue(uint32_t firstValue, uint32_t lastValue) {
     if (firstValue > lastValue) {
         std::swap(firstValue, lastValue);
     }

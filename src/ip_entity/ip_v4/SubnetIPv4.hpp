@@ -9,14 +9,14 @@ class SubnetIPv4: protected RangeIPv4 {
 public:
     static SubnetIPv4 createFromFirstValueAndMaskLength(uint32_t firstValue, uint8_t maskLength);
 
-    static SubnetIPv4 createFromFirstValueAndMaskValue(uint32_t firstValue, uint32_t maskValue);
+    static SubnetIPv4 createFromFirstValueAndSubnetSize(uint32_t firstValue, uint32_t subnetSize);
 
-    static SubnetIPv4 unsafeCreateFromFirstValueAndMaskValue(uint32_t firstValue, uint32_t maskValue);
+    static SubnetIPv4 unsafeCreateFromFirstValueAndSubnetSize(uint32_t firstValue, uint32_t subnetSize);
 
     std::string getAsText() override;
 
 protected:
-    SubnetIPv4(uint32_t firstValue, uint32_t maskValue);
+    SubnetIPv4(uint32_t firstValue, uint32_t subnetSize);
 
-    SubnetIPv4(uint32_t firstValue, uint32_t maskValue, uint8_t maskLength);
+    SubnetIPv4(uint32_t firstValue, uint32_t subnetSize, uint8_t maskLength);
 };
