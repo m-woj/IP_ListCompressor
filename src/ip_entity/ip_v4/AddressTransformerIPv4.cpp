@@ -57,3 +57,8 @@ uint8_t AddressTransformerIPv4::getMaskLengthFromSubnetSize(uint32_t subnetSize)
 uint32_t AddressTransformerIPv4::getLastValueFromFirstValueAndSubnetSize(uint32_t firstValue, uint32_t subnetSize) {
     return firstValue + subnetSize - 1;
 }
+
+
+bool AddressTransformerIPv4::isStandardSubnetSize(uint32_t subnetSize) {
+    return false;
+}

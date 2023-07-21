@@ -6,7 +6,6 @@
 
 #include "../RangeAbstract.hpp"
 #include "AddressTransformerIPv4.hpp"
-#include "AddressPredicatorIPv4.hpp"
 
 
 class RangeIPv4: public RangeAbstract<uint32_t, std::string> {
@@ -17,11 +16,8 @@ public:
 
 protected:
     RangeIPv4(uint32_t firstValue, uint32_t lastValue): RangeAbstract(firstValue, lastValue) {};
-
-    static AddressTransformerIPv4 transformer;
-    static AddressPredicatorIPv4 predicator;
 };
 
 
-AddressTransformerIPv4 RangeIPv4::transformer = AddressTransformerIPv4();
-AddressPredicatorIPv4 RangeIPv4::predicator = AddressPredicatorIPv4();
+template<> AddressTransformer<uint32_t>* RangeIPv4::RangeAbstract<uint32_t, std::string>::
+        transformer = new AddressTransformerIPv4();

@@ -2,5 +2,5 @@
 
 
 std::string HostIPv4::getAsText() {
-    return transformer.getStringFromValue(firstValue);
+    return transformer->getStringFromValue(firstValue);
 }

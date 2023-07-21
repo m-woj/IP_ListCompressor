@@ -2,11 +2,10 @@
 
 #define RANGE_DELIMITER_SIGN "-"
 
-
 std::string RangeIPv4::getAsText() {
-    return transformer.getStringFromValue(firstValue) +
+    return transformer->getStringFromValue(firstValue) +
            RANGE_DELIMITER_SIGN +
-           transformer.getStringFromValue(lastValue);
+           transformer->getStringFromValue(lastValue);
 }
 
 

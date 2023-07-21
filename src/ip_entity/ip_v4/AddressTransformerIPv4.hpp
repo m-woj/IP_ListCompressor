@@ -14,4 +14,8 @@ public:
     uint8_t getMaskLengthFromSubnetSize(uint32_t subnetSize) override;
 
     uint32_t getLastValueFromFirstValueAndSubnetSize(uint32_t firstValue, uint32_t subnetSize) override;
+
+protected:
+    bool isStandardSubnetSize(uint32_t subnetSize);
 };
+

@@ -2,32 +2,37 @@
 
 #include "Range.hpp"
 #include "AddressTransformer.hpp"
-#include "AddressPredicator.hpp"
 
 
-template<class SizeT, class TextT>
-class RangeAbstract: public Range<SizeT, TextT> {
+#define RANGE_DELIMITER_SIGN "-"
+
+
+template<class SizeT>
+class RangeAbstract : public Range<SizeT> {
 protected:
     SizeT firstValue;
     SizeT lastValue;
 
-    static AddressTransformer<SizeT> transformer;
-    static AddressPredicator<SizeT> predicator;
+    static AddressTransformer<SizeT>* transformer;
 
 public:
-    SizeT getFirstValue() override {
-        return (this->firstValue);
+    SizeT getFirstValue() final {
+        return firstValue;
     }
 
-    SizeT getLastValue() override {
-        return (this->lastValue);
+    SizeT getLastValue() final {
+        return lastValue;
     }
 
-    void setLastValue(SizeT value) override {
+    void setLastValue(SizeT value) final {
         this->lastValue = value;
     }
 
-    TextT getAsText() override = 0;
+    std::string getAsText() override {
+        return transformer->getStringFromValue(firstValue) +
+               RANGE_DELIMITER_SIGN +
+               transformer->getStringFromValue(lastValue);
+    }
 
 protected:
     RangeAbstract(SizeT firstValue, SizeT lastValue): firstValue(firstValue), lastValue(lastValue) {};

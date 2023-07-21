@@ -1,10 +1,13 @@
 #pragma once
 
 
-template<class SizeT, class TextT>
+#include <string>
+
+
+template<class SizeT>
 class Range {
 public:
-    virtual TextT getAsText() = 0;
+    virtual std::string getAsText() = 0;
 
     virtual SizeT getFirstValue() = 0;
 
