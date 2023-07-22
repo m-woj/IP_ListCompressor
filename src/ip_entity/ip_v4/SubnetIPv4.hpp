@@ -3,7 +3,7 @@
 #include "../SubnetAbstract.hpp"
 
 
-class SubnetIPv4 : protected SubnetAbstract<uint32_t> {
+class SubnetIPv4 : public SubnetAbstract<uint32_t> {
 public:
     static SubnetIPv4 createFromFirstValueAndMaskLength(uint32_t firstValue, uint8_t maskLength);
 
