@@ -14,5 +14,5 @@ public:
 
     virtual SizeT getSubnetAddressValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) = 0;
 
-    virtual ~SubnetTransformer() = 0;
+    virtual ~SubnetTransformer() = default;
 };

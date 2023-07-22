@@ -7,6 +7,10 @@
 #include <cmath>
 
 bool isValidSubnetSize(uint32_t subnetSize) {
+    if (subnetSize == 0) {
+        return false;
+    }
+
     if (subnetSize == 1) {
         return true;
     }

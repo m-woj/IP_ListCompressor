@@ -15,7 +15,8 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME}
-        TestAddressTransformer.cpp ../AddressTransformerIPv4.cpp)
+        TestAddressTransformer.cpp ../AddressTransformerIPv4.cpp
+        TestSubnetTransformer.cpp ../SubnetTransformerIPv4.cpp)
 
 target_link_libraries(${PROJECT_NAME} GTest::gtest_main)
 
