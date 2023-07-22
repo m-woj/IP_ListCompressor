@@ -1,12 +1,13 @@
 #pragma once
 
+#include <list>
+#include <string>
 
 #include "../ConvertingStrategy.hpp"
 
 
-template<class ContainerT>
-class Purifier: public ConvertingStrategy<ContainerT> {
-    ContainerT convert(ContainerT& input) {
+class Purifier: public ConvertingStrategy<std::list<std::string>> {
+    std::list<std::string> convert(std::list<std::string>& input) {
         return {};
     }
 };
