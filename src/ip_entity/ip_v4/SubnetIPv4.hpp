@@ -2,11 +2,8 @@
 
 #include "../SubnetAbstract.hpp"
 
-#include "SubnetTransformerIPv4.hpp"
 
-
-class SubnetIPv4: protected SubnetAbstract<uint32_t> {
-
+class SubnetIPv4 : protected SubnetAbstract<uint32_t> {
 public:
     static SubnetIPv4 createFromFirstValueAndMaskLength(uint32_t firstValue, uint8_t maskLength);
 
@@ -17,9 +14,6 @@ public:
 protected:
     SubnetIPv4(uint32_t firstValue, uint32_t subnetSize) : SubnetAbstract(firstValue, subnetSize) {};
 
-    SubnetIPv4(uint32_t firstValue, uint32_t subnetSize, uint8_t maskLength);
+    SubnetIPv4(uint32_t firstValue, uint32_t subnetSize, uint8_t maskLength) :
+        SubnetAbstract(firstValue, subnetSize, maskLength) {};
 };
-
-
-template<> SubnetTransformer<uint32_t>* SubnetIPv4::SubnetAbstract<uint32_t>::
-        subnetTransformer = new SubnetTransformerIPv4();

@@ -13,7 +13,7 @@ protected:
     SizeT firstValue;
     SizeT lastValue;
 
-    static AddressTransformer<SizeT>* transformer;
+    static AddressTransformer<SizeT>& addressTransformer;
 
 public:
     SizeT getFirstValue() final {
@@ -29,9 +29,9 @@ public:
     }
 
     std::string getAsText() override {
-        return transformer->getStringFromValue(firstValue) +
+        return addressTransformer.getStringFromValue(firstValue) +
                RANGE_DELIMITER_SIGN +
-               transformer->getStringFromValue(lastValue);
+               addressTransformer.getStringFromValue(lastValue);
     }
 
 protected:

@@ -9,5 +9,4 @@ public:
     virtual std::string getStringFromValue(SizeT value) = 0;
 
     virtual ~AddressTransformer() = 0;
-
 };

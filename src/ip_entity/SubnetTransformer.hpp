@@ -12,7 +12,7 @@ public:
 
     virtual SizeT getLastValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) = 0;
 
-    virtual SizeT getSubnetValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) = 0;
+    virtual SizeT getSubnetAddressValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) = 0;
 
     virtual ~SubnetTransformer() = 0;
 };

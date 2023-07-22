@@ -10,6 +10,8 @@ add_compile_options(-Wall -Wextra -Wconversion -Wsign-conversion -Wpedantic -Wef
 
 add_library(${PROJECT_NAME}
         AddressTransformerIPv4.cpp
-        RangeIPv4.cpp RangeIPv4.hpp
-        HostIPv4.cpp HostIPv4.hpp
-        SubnetIPv4.cpp SubnetIPv4.hpp ../HostAbstract.hpp ../SubnetTransformer.hpp ../SubnetTransformer.hpp ../SubnetAbstract.hpp SubnetTransformerIPv4.hpp)
+        SubnetTransformerIPv4.cpp
+        RangeIPv4.cpp
+        HostIPv4.cpp
+        SubnetIPv4.cpp
+        )
