@@ -1,12 +1,11 @@
 #pragma once
 
 
-#include "ConvertingStrategy.hpp"
+#include "../ConvertingStrategy.hpp"
 
 
 template<class ContainerT>
-class Decomposer: public ConvertingStrategy<ContainerT> {
-public:
+class Purifier: public ConvertingStrategy<ContainerT> {
     ContainerT convert(ContainerT& input) {
         return {};
     }

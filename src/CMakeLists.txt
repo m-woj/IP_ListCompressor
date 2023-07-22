@@ -4,4 +4,4 @@ add_library(${PROJECT_NAME}_src
         )
 
 
-add_subdirectory(convertion)
+add_subdirectory(conversion)
