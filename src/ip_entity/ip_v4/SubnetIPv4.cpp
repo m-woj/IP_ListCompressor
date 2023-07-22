@@ -26,7 +26,7 @@ SubnetIPv4 SubnetIPv4::unsafeCreateFromFirstValueAndSubnetSize(uint32_t firstVal
 
 
 SubnetIPv4 SubnetIPv4::createFromFirstValueAndMaskLength(uint32_t firstValue, uint8_t maskLength) {
-//    auto subnetSize = subnetTransformer.getSubnetSizeFromMaskLength(maskLength);
+    auto subnetSize = subnetTransformer.getSubnetSizeFromMaskLength(maskLength);
     firstValue = subnetTransformer.getSubnetAddressValueFromFirstValueAndSubnetSize(firstValue, subnetSize);
     return {firstValue, subnetSize, maskLength};
 }
