@@ -6,7 +6,7 @@
 template<class SizeT>
 class AddressTransformer {
 public:
-    virtual std::string getStringFromValue(SizeT value) = 0;
+    virtual std::string getAsStringFromValue(SizeT value) = 0;
 
     virtual ~AddressTransformer() = default;
 };

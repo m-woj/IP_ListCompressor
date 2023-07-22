@@ -1,15 +1,15 @@
 #pragma once
 
-#include "RangeIPv4.hpp"
+#include "../HostAbstract.hpp"
 
 
-class HostIPv4: protected RangeIPv4 {
+class HostIPv4: public HostAbstract<uint32_t> {
     static HostIPv4 createFromValue(uint32_t value) {
         return HostIPv4(value);
     }
 
-    std::string getAsText() override;
+    std::string getAsString() override;
 
 protected:
-    explicit HostIPv4(uint32_t value): RangeIPv4(value, value) {};
+    explicit HostIPv4(uint32_t value) : HostAbstract(value) {};
 };

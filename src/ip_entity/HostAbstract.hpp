@@ -6,7 +6,10 @@
 template<class SizeT>
 class HostAbstract : public RangeAbstract<SizeT> {
 public:
-    std::string getAsText() {
-        return RangeAbstract<SizeT>::addressTransformer->getStringFromValue(RangeAbstract<SizeT>::firstValue);
+    std::string getAsString() {
+        return RangeAbstract<SizeT>::addressTransformer.getAsDecimalStringFromValue(RangeAbstract<SizeT>::firstValue);
     }
+
+protected:
+    explicit HostAbstract(SizeT value) : RangeAbstract<SizeT>(value, value) {};
 };

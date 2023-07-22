@@ -1,11 +1,20 @@
 #include "RangeIPv4.hpp"
 
+#include "AddressTransformerIPv4.hpp"
+
 #define RANGE_DELIMITER_SIGN "-"
 
-std::string RangeIPv4::getAsText() {
-    return transformer->getStringFromValue(firstValue) +
+
+AddressTransformerIPv4 addressTransformerIPv4 = AddressTransformerIPv4();
+
+template<> AddressTransformer<uint32_t>& RangeIPv4::RangeAbstract<uint32_t>::
+        addressTransformer = addressTransformerIPv4;
+
+
+std::string RangeIPv4::getAsString() {
+    return addressTransformer.getAsStringFromValue(firstValue) +
            RANGE_DELIMITER_SIGN +
-           transformer->getStringFromValue(lastValue);
+           addressTransformer.getAsStringFromValue(lastValue);
 }
 
 

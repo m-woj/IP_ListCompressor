@@ -3,7 +3,7 @@
 #include "AddressTransformerIPv4.hpp"
 
 
-std::string AddressTransformerIPv4::getStringFromValue(uint32_t value) {
+std::string AddressTransformerIPv4::getAsStringFromValue(uint32_t value) {
     struct sockaddr_in sockAddress{};
     sockAddress.sin_addr.s_addr = htonl(value);
     char buf[INET_ADDRSTRLEN];

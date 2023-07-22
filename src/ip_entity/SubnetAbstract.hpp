@@ -15,9 +15,9 @@ protected:
     uint8_t maskLength;
 
 public:
-    std::string getAsText() override {
-        return RangeAbstract<SizeT>::addressTransformer.getStringFromValue(
-                    RangeAbstract<SizeT>::firstValue) +
+    std::string getAsString() override {
+        return RangeAbstract<SizeT>::addressTransformer.getAsDecimalStringFromValue(
+                RangeAbstract<SizeT>::firstValue) +
                     SUBNET_AND_MASK_DELIMITER +
                     std::to_string(maskLength);
     }

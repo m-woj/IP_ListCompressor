@@ -7,7 +7,7 @@
 template<class SizeT>
 class Range {
 public:
-    virtual std::string getAsText() = 0;
+    virtual std::string getAsString() = 0;
 
     virtual SizeT getFirstValue() = 0;
 
@@ -15,5 +15,5 @@ public:
 
     virtual void setLastValue(SizeT value) = 0;
 
-    virtual ~Range() = 0;
+    virtual ~Range() = default;
 };

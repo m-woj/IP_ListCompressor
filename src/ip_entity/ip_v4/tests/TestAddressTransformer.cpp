@@ -5,13 +5,13 @@
 #include "../AddressTransformerIPv4.hpp"
 
 
-auto testGetStringFromValue = [](uint32_t value, std::string& expectedString){
-    auto producedString = AddressTransformerIPv4().getStringFromValue(value);
+auto testGetAsDecimalStringFromValue = [](uint32_t value, std::string& expectedString){
+    auto producedString = AddressTransformerIPv4().getAsStringFromValue(value);
     ASSERT_EQ(producedString, expectedString) << "For value: " << value;
 };
 
 
-TEST(TestAddressTransformer, getStringFromValue) {
+TEST(TestAddressTransformer, getAsDecimalStringFromValue) {
     using testPair = std::pair<uint32_t, std::string>;
     std::array InputsAndExpectedOutputs = {
         testPair {0, "0.0.0.0"},
@@ -26,6 +26,6 @@ TEST(TestAddressTransformer, getStringFromValue) {
     };
 
     std::for_each(InputsAndExpectedOutputs.begin(), InputsAndExpectedOutputs.end(), [](auto pair){
-        testGetStringFromValue(pair.first, pair.second);
+        testGetAsDecimalStringFromValue(pair.first, pair.second);
     });
 }

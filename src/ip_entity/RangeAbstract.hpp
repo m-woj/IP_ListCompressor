@@ -28,14 +28,14 @@ public:
         this->lastValue = value;
     }
 
-    std::string getAsText() override {
-        return addressTransformer.getStringFromValue(firstValue) +
+    std::string getAsString() override {
+        return addressTransformer.getAsDecimalStringFromValue(firstValue) +
                RANGE_DELIMITER_SIGN +
-               addressTransformer.getStringFromValue(lastValue);
+               addressTransformer.getAsDecimalStringFromValue(lastValue);
     }
 
 protected:
     RangeAbstract(SizeT firstValue, SizeT lastValue): firstValue(firstValue), lastValue(lastValue) {};
 
-    ~RangeAbstract() override = 0;
+    ~RangeAbstract() override = default;
 };
