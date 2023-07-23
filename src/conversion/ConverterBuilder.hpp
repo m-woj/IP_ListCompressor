@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ConverterConfig.hpp"
 #include "Converter.hpp"
 
 
@@ -9,15 +10,29 @@ class ConverterBuilder {
 public:
     [[maybe_unused]] void setIPv6Requirement(bool IPv6Requirement);
 
-    [[maybe_unused]] void setMultithreadingRequirement(bool value);
+    [[maybe_unused]] void setMultithreadingRequirement(bool multithreadingRequirement);
+
 
     [[maybe_unused]] void setCompressionRequirement(bool compressionRequirement);
 
     [[maybe_unused]] void setRangesDecompositionRequirement(bool rangesDecompositionRequirement);
 
-    [[maybe_unused]] void setRangesBuildingRequired(bool rangesBuildingRequired);
+    [[maybe_unused]] void setRangesBuildingRequirement(bool rangesBuildingRequired);
 
-    [[maybe_unused]] void setPurificationOnlyRequired(bool purificationOnlyRequired);
+    [[maybe_unused]] void setPurificationOnlyRequirement(bool purificationOnlyRequired);
+
+
+    [[maybe_unused]] void setInputRecordsDelimiter(const char* inputRecordsDelimiter);
+
+
+    [[maybe_unused]] void setHostsPrefix(std::string hostsPrefix);
+
+    [[maybe_unused]] void setSubnetsPrefix(std::string subnetsPrefix);
+
+    [[maybe_unused]] void setRangesPrefix(std::string rangesPrefix);
+
+    [[maybe_unused]] void setSuffix(std::string suffix);
+
 
     [[nodiscard]] Converter get() const;
 };

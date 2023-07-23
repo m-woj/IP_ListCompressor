@@ -8,8 +8,8 @@ void ConverterBuilder::setIPv6Requirement(bool IPv6Requirement) {
 }
 
 
-void ConverterBuilder::setMultithreadingRequirement(bool value) {
-    this->converterConfig.multithreadingRequired = value;
+void ConverterBuilder::setMultithreadingRequirement(bool multithreadingRequirement) {
+    this->converterConfig.multithreadingRequired = multithreadingRequirement;
 }
 
 
@@ -23,13 +23,38 @@ void ConverterBuilder::setRangesDecompositionRequirement(bool rangesDecompositio
 }
 
 
-void ConverterBuilder::setRangesBuildingRequired(bool rangesBuildingRequired) {
+void ConverterBuilder::setRangesBuildingRequirement(bool rangesBuildingRequired) {
     this->converterConfig.rangesBuildingRequired = rangesBuildingRequired;
 }
 
 
-void ConverterBuilder::setPurificationOnlyRequired(bool purificationOnlyRequired) {
+void ConverterBuilder::setPurificationOnlyRequirement(bool purificationOnlyRequired) {
     this->converterConfig.purificationOnlyRequired = purificationOnlyRequired;
+}
+
+
+void ConverterBuilder::setInputRecordsDelimiter(const char* inputRecordsDelimiter) {
+    if ()
+}
+
+
+void ConverterBuilder::setHostsPrefix(std::string hostsPrefix) {
+
+}
+
+
+void ConverterBuilder::setSubnetsPrefix(std::string subnetsPrefix) {
+
+}
+
+
+void ConverterBuilder::setRangesPrefix(std::string rangesPrefix) {
+
+}
+
+
+void ConverterBuilder::setSuffix(std::string suffix) {
+
 }
 
 
@@ -37,11 +62,11 @@ Converter ConverterBuilder::get() const {
     assert(!(this->converterConfig.rangesBuildingRequired && this->converterConfig.rangesDecompositionRequired));
     assert(!(
             this->converterConfig.purificationOnlyRequired &&
-           (
-                   this->converterConfig.rangesDecompositionRequired ||
-                   this->converterConfig.rangesBuildingRequired ||
-                   this->converterConfig.compressionRequired
-                   )));
+            (
+                    this->converterConfig.rangesDecompositionRequired ||
+                    this->converterConfig.rangesBuildingRequired ||
+                    this->converterConfig.compressionRequired
+            )));
 
     return Converter::createFromConverterConfig(converterConfig);
 }

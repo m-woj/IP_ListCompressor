@@ -13,5 +13,4 @@ add_library(${PROJECT_NAME}
         SubnetTransformerIPv4.cpp
         SubnetIPv4.cpp
         RangeIPv4.cpp
-        HostIPv4.cpp
         )

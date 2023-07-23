@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "RangeAbstract.hpp"
 #include "SubnetTransformer.hpp"
 
@@ -9,17 +11,23 @@
 
 template<class SizeT>
 class SubnetAbstract : public RangeAbstract<SizeT> {
+    static std::string stringPrefix;
+
 protected:
     static SubnetTransformer<SizeT>& subnetTransformer;
 
     uint8_t maskLength;
 
 public:
-    std::string getAsString() override {
-        return RangeAbstract<SizeT>::addressTransformer.getAsDecimalStringFromValue(
-                RangeAbstract<SizeT>::firstValue) +
-                    SUBNET_AND_MASK_DELIMITER +
-                    std::to_string(maskLength);
+    static void setStringPrefix(std::string&& newStringPrefix) {
+        SubnetAbstract::stringPrefix = std::move(newStringPrefix);
+    }
+
+    std::string getAsStringWithPrefix() override {
+        return stringPrefix +
+            RangeAbstract<SizeT>::addressTransformer.getAsStringFromValue(RangeAbstract<SizeT>::firstValue) +
+            SUBNET_AND_MASK_DELIMITER +
+            std::to_string(maskLength);
     }
 
 protected:
@@ -34,3 +42,7 @@ protected:
         this->lastValue = subnetTransformer.getLastValueFromFirstValueAndSubnetSize(firstValue, subnetSize);
     }
 };
+
+
+template<class SizeT>
+std::string SubnetAbstract<SizeT>::stringPrefix = "";

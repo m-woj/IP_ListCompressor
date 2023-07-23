@@ -8,8 +8,6 @@ class HostIPv4: public HostAbstract<uint32_t> {
         return HostIPv4(value);
     }
 
-    std::string getAsString() override;
-
 protected:
     explicit HostIPv4(uint32_t value) : HostAbstract(value) {};
 };

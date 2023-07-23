@@ -1,6 +1,16 @@
 #include "Converter.hpp"
 
 
-std::vector<std::string> Converter::convert(std::vector<std::string> &input) {
+Converter::Converter(ConverterConfig converterConfig) : config(converterConfig) {
+
+}
+
+
+void Converter::addInput(std::string &&input) {
+
+}
+
+
+std::forward_list<IPRecord> Converter::getConverted() {
     return {};
 }

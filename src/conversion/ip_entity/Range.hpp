@@ -1,19 +1,17 @@
 #pragma once
 
 
-#include <string>
+#include "IPRecord.hpp"
 
 
 template<class SizeT>
-class Range {
+class Range : IPRecord {
 public:
-    virtual std::string getAsString() = 0;
-
     virtual SizeT getFirstValue() = 0;
 
     virtual SizeT getLastValue() = 0;
 
     virtual void setLastValue(SizeT value) = 0;
 
-    virtual ~Range() = default;
+    ~Range() override = default;
 };
