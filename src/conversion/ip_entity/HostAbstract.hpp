@@ -1,22 +1,19 @@
 #pragma once
 
-#include <string>
 
+#include "consts.hpp"
 #include "RangeAbstract.hpp"
 
 
 template<class SizeT>
 class HostAbstract : public RangeAbstract<SizeT> {
-    static std::string stringPrefix;
+    static char prefix[RECORD_DECORATOR_SIZE];
 
 public:
-    static void setStringPrefix(std::string&& newStringPrefix) {
-        HostAbstract::stringPrefix = std::move(newStringPrefix);
-    }
+    static void setPrefix(const char* newPrefix) {
+        assert(std::strlen(newPrefix) < RECORD_DECORATOR_MAX_LENGTH);
 
-    std::string getAsStringWithPrefix() override {
-        return stringPrefix +
-            RangeAbstract<SizeT>::addressTransformer.getAsStringFromValue(RangeAbstract<SizeT>::firstValue);
+        std::strcpy(prefix, newPrefix);
     }
 
 protected:
@@ -25,4 +22,4 @@ protected:
 
 
 template<class SizeT>
-std::string HostAbstract<SizeT>::stringPrefix = "";
+char HostAbstract<SizeT>::prefix[RECORD_DECORATOR_SIZE] = DEFAULT_PREFIX;

@@ -1,11 +1,12 @@
 #pragma once
 
-#include <string>
+
+#include "IPText.hpp"
 
 
 class IPRecord {
 public:
-    virtual std::string getAsString() = 0;
+    virtual IPText getAsText() = 0;
 
     virtual ~IPRecord() = default;
 };

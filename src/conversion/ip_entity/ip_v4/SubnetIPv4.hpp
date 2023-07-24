@@ -11,6 +11,8 @@ public:
 
     static SubnetIPv4 unsafeCreateFromFirstValueAndSubnetSize(uint32_t firstValue, uint32_t subnetSize);
 
+    IPText getAsText() override;
+
 protected:
     SubnetIPv4(uint32_t firstValue, uint32_t subnetSize) : SubnetAbstract(firstValue, subnetSize) {};
 

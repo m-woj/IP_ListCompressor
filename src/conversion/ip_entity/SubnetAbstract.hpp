@@ -1,17 +1,14 @@
 #pragma once
 
-#include <string>
 
+#include "consts.hpp"
 #include "RangeAbstract.hpp"
 #include "SubnetTransformer.hpp"
 
 
-#define SUBNET_AND_MASK_DELIMITER "/"
-
-
 template<class SizeT>
 class SubnetAbstract : public RangeAbstract<SizeT> {
-    static std::string stringPrefix;
+    static char prefix[RECORD_DECORATOR_SIZE];
 
 protected:
     static SubnetTransformer<SizeT>& subnetTransformer;
@@ -19,16 +16,13 @@ protected:
     uint8_t maskLength;
 
 public:
-    static void setStringPrefix(std::string&& newStringPrefix) {
-        SubnetAbstract::stringPrefix = std::move(newStringPrefix);
+    static void setPrefix(const char* newPrefix) {
+        assert(std::strlen(newPrefix) < RECORD_DECORATOR_MAX_LENGTH);
+
+        std::strcpy(prefix, newPrefix);
     }
 
-    std::string getAsStringWithPrefix() override {
-        return stringPrefix +
-            RangeAbstract<SizeT>::addressTransformer.getAsStringFromValue(RangeAbstract<SizeT>::firstValue) +
-            SUBNET_AND_MASK_DELIMITER +
-            std::to_string(maskLength);
-    }
+    IPText getAsText() override = 0;
 
 protected:
     SubnetAbstract(SizeT firstValue, SizeT subnetSize):
@@ -45,4 +39,4 @@ protected:
 
 
 template<class SizeT>
-std::string SubnetAbstract<SizeT>::stringPrefix = "";
+char SubnetAbstract<SizeT>::prefix[RECORD_DECORATOR_SIZE] = DEFAULT_PREFIX;

@@ -28,5 +28,5 @@ public:
     std::forward_list<IPRecord> getConverted();
 
 protected:
-    explicit Converter(ConverterConfig converterConfig);;
+    explicit Converter(ConverterConfig converterConfig);
 };

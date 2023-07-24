@@ -1,35 +1,35 @@
 #pragma once
 
-#include <string>
-#include <utility>
+#include <cstring>
+#include <cassert>
 
+#include "consts.hpp"
 #include "Range.hpp"
 #include "AddressTransformer.hpp"
 
 
-#define RANGE_DELIMITER_SIGN "-"
-#define DEFAULT_SUFFIX "\n"
-
-
 template<class SizeT>
 class RangeAbstract : public Range<SizeT> {
-    static std::string stringPrefix;
+    static char prefix[RECORD_DECORATOR_SIZE];
 
 protected:
-    static std::string stringSuffix;
+    static char suffix[RECORD_DECORATOR_SIZE];
+    static AddressTransformer<SizeT>& addressTransformer;
 
     SizeT firstValue;
     SizeT lastValue;
 
-    static AddressTransformer<SizeT>& addressTransformer;
-
 public:
-    static void setStringPrefix(std::string&& newStringPrefix) {
-        RangeAbstract::stringPrefix = std::move(newStringPrefix);
+    static void setPrefix(const char* newPrefix) {
+        assert(std::strlen(newPrefix) < RECORD_DECORATOR_MAX_LENGTH);
+
+        std::strcpy(prefix, newPrefix);
     }
 
-    static void setStringSuffix(std::string&& newStringSuffix) {
-        RangeAbstract::stringSuffix = std::move(newStringSuffix);
+    static void setSuffix(const char* newSuffix) {
+        assert(std::strlen(newSuffix) < RECORD_DECORATOR_MAX_LENGTH);
+
+        std::strcpy(suffix, newSuffix);
     }
 
     SizeT getFirstValue() final {
@@ -44,17 +44,9 @@ public:
         this->lastValue = value;
     }
 
-    std::string getAsString() final {
-        return getAsStringWithPrefix() + stringSuffix;
-    }
+    IPText getAsText() override = 0;
 
 protected:
-    virtual std::string getAsStringWithPrefix() {
-        return addressTransformer.getAsStringFromValue(firstValue) +
-               RANGE_DELIMITER_SIGN +
-               addressTransformer.getAsStringFromValue(lastValue);
-    }
-
     RangeAbstract(SizeT firstValue, SizeT lastValue): firstValue(firstValue), lastValue(lastValue) {};
 
     ~RangeAbstract() override = default;
@@ -62,7 +54,7 @@ protected:
 
 
 template<class SizeT>
-std::string RangeAbstract<SizeT>::stringPrefix = "";
+char RangeAbstract<SizeT>::prefix[RECORD_DECORATOR_SIZE] = DEFAULT_PREFIX;
 
 template<class SizeT>
-std::string RangeAbstract<SizeT>::stringSuffix = DEFAULT_SUFFIX;
+char RangeAbstract<SizeT>::suffix[RECORD_DECORATOR_SIZE] = DEFAULT_SUFFIX;

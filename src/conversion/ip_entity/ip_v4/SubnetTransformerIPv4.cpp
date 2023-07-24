@@ -30,6 +30,7 @@ bool isValidSubnetSize(uint32_t subnetSize) {
 uint32_t getStandardSubnetSizeFromMaskLength(uint8_t maskLength);
 uint32_t getSubnetSizeForZeroMaskLength();
 
+
 uint32_t SubnetTransformerIPv4::getSubnetSizeFromMaskLength(uint8_t maskLength) {
     assert(maskLength <= 32);
 
@@ -40,9 +41,11 @@ uint32_t SubnetTransformerIPv4::getSubnetSizeFromMaskLength(uint8_t maskLength) 
     return getStandardSubnetSizeFromMaskLength(maskLength);
 }
 
+
 uint32_t getSubnetSizeForZeroMaskLength() {
     return std::numeric_limits<uint32_t>::max();
 }
+
 
 uint32_t getStandardSubnetSizeFromMaskLength(uint8_t maskLength) {
     assert(maskLength > 0);

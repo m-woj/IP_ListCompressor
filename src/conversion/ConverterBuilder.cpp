@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstring>
 
 #include "ConverterBuilder.hpp"
 
@@ -33,28 +34,54 @@ void ConverterBuilder::setPurificationOnlyRequirement(bool purificationOnlyRequi
 }
 
 
+auto setIfPossible = [](
+        auto src, auto dst, auto maxLength, auto errorMessage) {
+    if (std::strlen(src) > maxLength) {
+        throw std::length_error(errorMessage);
+    }
+    else {
+        std::strcpy(dst, src);
+    }
+};
+
+
 void ConverterBuilder::setInputRecordsDelimiter(const char* inputRecordsDelimiter) {
-    if ()
+    setIfPossible(inputRecordsDelimiter,
+                  this->converterConfig.inputRecordsDelimiter,
+                  RECORDS_DELIMITER_MAX_LENGTH,
+                  "Input records delimiter is too long.");
 }
 
 
-void ConverterBuilder::setHostsPrefix(std::string hostsPrefix) {
-
+void ConverterBuilder::setHostsPrefix(const char* hostsPrefix) {
+    setIfPossible(hostsPrefix,
+                  this->converterConfig.hostsPrefix,
+                  RECORD_DECORATOR_MAX_LENGTH,
+                  "Host prefix is too long.");
 }
 
 
-void ConverterBuilder::setSubnetsPrefix(std::string subnetsPrefix) {
-
+void ConverterBuilder::setSubnetsPrefix(const char* subnetsPrefix) {
+    setIfPossible(subnetsPrefix,
+                  this->converterConfig.subnetsPrefix,
+                  RECORD_DECORATOR_MAX_LENGTH,
+                  "Subnet prefix is too long.");
 }
 
 
-void ConverterBuilder::setRangesPrefix(std::string rangesPrefix) {
-
+void ConverterBuilder::setRangesPrefix(const char* rangesPrefix) {
+    setIfPossible(rangesPrefix,
+                  this->converterConfig.rangesPrefix,
+                  RECORD_DECORATOR_MAX_LENGTH,
+                  "Range prefix is too long.");
 }
 
 
-void ConverterBuilder::setSuffix(std::string suffix) {
-
+void ConverterBuilder::setSuffix(const char* suffix) {
+    setIfPossible(suffix,
+                  this->converterConfig.suffix,
+                  RECORD_DECORATOR_MAX_LENGTH,
+                  "Suffix is too long.");
 }
 
 

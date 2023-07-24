@@ -1,12 +1,13 @@
 #pragma once
 
-#include "string"
+
+#include "../IPText.hpp"
 
 
 template<class SizeT>
 class AddressTransformer {
 public:
-    virtual std::string getAsStringFromValue(SizeT value) = 0;
+    virtual IPText getAsTextFromValue(SizeT value) = 0;
 
     virtual ~AddressTransformer() = default;
 };

@@ -25,13 +25,13 @@ public:
     [[maybe_unused]] void setInputRecordsDelimiter(const char* inputRecordsDelimiter);
 
 
-    [[maybe_unused]] void setHostsPrefix(std::string hostsPrefix);
+    [[maybe_unused]] void setHostsPrefix(const char* hostsPrefix);
 
-    [[maybe_unused]] void setSubnetsPrefix(std::string subnetsPrefix);
+    [[maybe_unused]] void setSubnetsPrefix(const char* subnetsPrefix);
 
-    [[maybe_unused]] void setRangesPrefix(std::string rangesPrefix);
+    [[maybe_unused]] void setRangesPrefix(const char* rangesPrefix);
 
-    [[maybe_unused]] void setSuffix(std::string suffix);
+    [[maybe_unused]] void setSuffix(const char* suffix);
 
 
     [[nodiscard]] Converter get() const;

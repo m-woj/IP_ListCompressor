@@ -30,3 +30,8 @@ SubnetIPv4 SubnetIPv4::createFromFirstValueAndMaskLength(uint32_t firstValue, ui
     firstValue = subnetTransformer.getSubnetAddressValueFromFirstValueAndSubnetSize(firstValue, subnetSize);
     return {firstValue, subnetSize, maskLength};
 }
+
+
+IPText *SubnetIPv4::getAsText() {
+    return RangeAbstract::getAsText();
+}
