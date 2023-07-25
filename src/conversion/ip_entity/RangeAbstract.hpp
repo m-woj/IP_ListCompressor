@@ -11,9 +11,9 @@
 template<class SizeT>
 class RangeAbstract : public Range<SizeT> {
     static char prefix[RECORD_DECORATOR_SIZE];
+    static char suffix[RECORD_DECORATOR_SIZE];
 
 protected:
-    static char suffix[RECORD_DECORATOR_SIZE];
     static AddressTransformer<SizeT>& addressTransformer;
 
     SizeT firstValue;
@@ -44,7 +44,20 @@ public:
         this->lastValue = value;
     }
 
-    IPText getAsText() override = 0;
+    IPText getAsText() override {
+        char contentBuffer[IP_RANGE_SIZE];
+        addressTransformer.convertFromValueToText(firstValue, contentBuffer);
+        std::strcat(contentBuffer, RANGE_DELIMITER_SIGN);
+
+        auto endOfContentBuffer = contentBuffer + std::strlen(contentBuffer);
+        addressTransformer.convertFromValueToText(lastValue, endOfContentBuffer);
+
+        auto textForm = IPText::createFromContent(contentBuffer);
+        textForm.addPrefix(prefix);
+        textForm.addSuffix(suffix);
+
+        return textForm;
+    }
 
 protected:
     RangeAbstract(SizeT firstValue, SizeT lastValue): firstValue(firstValue), lastValue(lastValue) {};

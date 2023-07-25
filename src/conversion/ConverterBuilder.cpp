@@ -35,7 +35,7 @@ void ConverterBuilder::setPurificationOnlyRequirement(bool purificationOnlyRequi
 
 
 auto setIfPossible = [](
-        auto src, auto dst, auto maxLength, auto errorMessage) {
+        auto src, auto dst, uint32_t maxLength, auto errorMessage) {
     if (std::strlen(src) > maxLength) {
         throw std::length_error(errorMessage);
     }

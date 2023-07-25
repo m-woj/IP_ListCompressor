@@ -6,5 +6,5 @@
 
 class AddressTransformerIPv4 : public AddressTransformer<uint32_t> {
 public:
-    IPText getAsTextFromValue(uint32_t value) override;
+    const char* convertFromValueToText(uint32_t value, char* textBuffer) override;
 };
