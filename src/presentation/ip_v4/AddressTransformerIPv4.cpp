@@ -14,11 +14,6 @@ const char* AddressTransformerIPv4::convertFromValueToText(uint32_t value, char*
 }
 
 
-void AddressTransformerIPv4::convertToText(Host<uint32_t> host, char* const textBuffer) {
-    AddressTransformerIPv4::convertFromValueToText(host.getValue(), textBuffer);
-}
-
-
 void AddressTransformerIPv4::convertToText(Range<uint32_t> range, char* const textBuffer) {
     AddressTransformerIPv4::convertFromValueToText(range.getFirstValue(), textBuffer);
     auto bufferEnd = textBuffer + std::strlen(textBuffer);
