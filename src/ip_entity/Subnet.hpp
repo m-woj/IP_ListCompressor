@@ -11,25 +11,26 @@ class Subnet {
 
     Range<SizeT> range;
 
-    uint8_t maskLength;
+    unsigned char maskLength;
 
 public:
-    [[nodiscard]] uint8_t getMaskLength() const {
+    [[nodiscard]] unsigned char getMaskLength() const {
         return maskLength;
     }
 
-    SizeT getFirstValue() const {
+    [[nodiscard]] SizeT getFirstValue() const {
         return range.firstHost.getValue();
     }
 
-    SizeT getLastValue() const {
+    [[nodiscard]] SizeT getLastValue() const {
         return range.lastHost.getValue();
     }
 
 private:
-    Subnet(SizeT firstValue, uint8_t maskLength): maskLength(maskLength) {
+    Subnet(SizeT firstValue, unsigned char maskLength): maskLength(maskLength) {
         auto&& subnetSize = subnetTransformer.getSubnetSizeFromMaskLength(maskLength);
         auto lastValue = subnetTransformer.getLastValueFromFirstValueAndSubnetSize(firstValue, subnetSize);
+
         this->range = Range<SizeT>::createFromFirstAndLastHost(
                 Host<SizeT>::createFromInitialValue(firstValue),
                 Host<SizeT>::createFromInitialValue(lastValue));

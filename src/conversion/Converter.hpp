@@ -4,36 +4,37 @@
 #include <forward_list>
 #include <vector>
 
+#include "../ip_entity/Host.hpp"
+#include "../ip_entity/Range.hpp"
+#include "../ip_entity/Subnet.hpp"
+
 #include "ConverterConfig.hpp"
-#include "../ip_entity/ip_v4/HostIPv4.hpp"
-#include "../ip_entity/ip_v4/RangeIPv4.hpp"
-#include "../ip_entity/ip_v4/SubnetIPv4.hpp"
 
 
-template<class HostT, class RangeT, class SubnetT>
+template<class SizeT>
 class Converter {
     const ConverterConfig config;
 
-    std::vector<HostT> hosts{};
-    std::vector<RangeT> ranges{};
-    std::vector<SubnetT> subnets{};
+    std::vector<Host<SizeT>> hosts{};
+    std::vector<Range<SizeT>> ranges{};
+    std::vector<Subnet<SizeT>> subnets{};
 
 public:
-    static Converter createFromConverterConfig(ConverterConfig converterConfig) {
-        return Converter(converterConfig);
+    static Converter<SizeT> createFromConverterConfig(ConverterConfig converterConfig) {
+        return Converter<SizeT>(converterConfig);
     };
 
     void addInput(std::string& input);
 
-    std::vector<HostT>& getConvertedHosts() {
+    [[nodiscard]] std::vector<Host<SizeT>>& getConvertedHosts() {
         return hosts;
     }
 
-    std::vector<RangeT>& getConvertedRanges() {
+    [[nodiscard]] std::vector<Range<SizeT>>& getConvertedRanges() {
         return ranges;
     }
 
-    std::vector<SubnetT>& getConvertedSubnets() {
+    [[nodiscard]] std::vector<Subnet<SizeT>>& getConvertedSubnets() {
         return subnets;
     }
 

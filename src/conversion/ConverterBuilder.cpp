@@ -85,7 +85,7 @@ void ConverterBuilder::setSuffix(const char* suffix) {
 }
 
 
-Converter ConverterBuilder::getIPv4Converter() const {
+Converter<uint32_t> ConverterBuilder::getIPv4Converter() const {
     assert(!(this->converterConfig.rangesBuildingRequired && this->converterConfig.rangesDecompositionRequired));
     assert(!(
             this->converterConfig.purificationOnlyRequired &&
@@ -95,5 +95,5 @@ Converter ConverterBuilder::getIPv4Converter() const {
                     this->converterConfig.compressionRequired
             )));
 
-    return Converter::createFromConverterConfig(converterConfig);
+    return Converter<uint32_t>::createFromConverterConfig(converterConfig);
 }
