@@ -6,19 +6,7 @@
 
 
 template<class SizeT>
-class AddressTransformer {
-public:
-    static const char* convertFromValueToText(SizeT value, char* textBuffer);
-
-    static const char* convertToText(Host<SizeT>& host, char* textBuffer) {
-        convertFromValueToText(host.getValue(), textBuffer);
-        return textBuffer;
-    }
-
-    static const char* convertToText(const Range<SizeT>& range, char* textBuffer);
-
-    static const char* convertToText(const Subnet<SizeT>& host, char* textBuffer);
-};
+class AddressTransformer {};
 
 
 template<>
@@ -26,6 +14,11 @@ class AddressTransformer<uint32_t> {
 public:
     static const char* convertFromValueToText(uint32_t value, char* textBuffer) {
         return AddressTransformerIPv4::convertFromValueToText(value, textBuffer);
+    }
+
+    static const char* convertToText(Host<uint32_t>& host, char* textBuffer) {
+        convertFromValueToText(host.getValue(), textBuffer);
+        return textBuffer;
     }
 
     static const char* convertToText(const Range<uint32_t>& range, char* textBuffer) {

@@ -40,11 +40,11 @@ public:
     }
 
 protected:
-    void sendAsHost(Host<SizeT> host, std::ostream& outputStream);
+    static void sendAsHost(Host<SizeT> host, std::ostream& outputStream);
 
-    void sendAsRange(Range<SizeT> range, std::ostream& outputStream);
+    static void sendAsRange(Range<SizeT> range, std::ostream& outputStream);
 
-    void sendAsSubnet(Subnet<SizeT> subnet, std::ostream& outputStream);
+    static void sendAsSubnet(Subnet<SizeT> subnet, std::ostream& outputStream);
 
     explicit Presenter(PresenterConfig presenterConfig): config(presenterConfig) {};
 };
@@ -52,17 +52,17 @@ protected:
 
 template<>
 class Presenter<uint32_t> {
-    void sendAsHost(Host<uint32_t> host, std::ostream& outputStream) {
+    static void sendAsHost(Host<uint32_t> host, std::ostream& outputStream) {
         char buffer[IPV4_SIZE];
         outputStream << AddressTransformer<uint32_t>::convertToText(host, buffer);
     }
 
-    void sendAsRange(Range<uint32_t> range, std::ostream& outputStream) {
+    static void sendAsRange(Range<uint32_t> range, std::ostream& outputStream) {
         char buffer[IPV4_RANGE_SIZE];
         outputStream << AddressTransformer<uint32_t>::convertToText(range, buffer);
     }
 
-    void sendAsSubnet(Subnet<uint32_t> subnet, std::ostream& outputStream) {
+    static void sendAsSubnet(Subnet<uint32_t> subnet, std::ostream& outputStream) {
         char buffer[IPV4_SUBNET_SIZE];
         outputStream << AddressTransformer<uint32_t>::convertToText(subnet, buffer);
     }

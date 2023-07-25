@@ -15,17 +15,17 @@ const char* AddressTransformerIPv4::convertFromValueToText(uint32_t value, char*
 
 
 void AddressTransformerIPv4::convertToText(const Range<uint32_t>& range, char* const textBuffer) {
-    AddressTransformerIPv4::convertFromValueToText(range.getFirstValue(), textBuffer);
+    convertFromValueToText(range.getFirstValue(), textBuffer);
     auto bufferEnd = textBuffer + std::strlen(textBuffer);
 
     *bufferEnd++ = RANGE_DELIMITER_SIGN;
 
-    AddressTransformerIPv4::convertFromValueToText(range.getLastValue(), bufferEnd);
+    convertFromValueToText(range.getLastValue(), bufferEnd);
 }
 
 
 void AddressTransformerIPv4::convertToText(const Subnet<uint32_t>& subnet, char* const textBuffer) {
-    AddressTransformerIPv4::convertFromValueToText(subnet.getFirstValue(), textBuffer);
+    convertFromValueToText(subnet.getFirstValue(), textBuffer);
     auto bufferEnd = textBuffer + std::strlen(textBuffer);
 
     *bufferEnd++ = SUBNET_AND_MASK_DELIMITER;
