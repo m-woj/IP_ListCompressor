@@ -21,18 +21,7 @@ public:
 
     [[maybe_unused]] void setPurificationOnlyRequirement(bool purificationOnlyRequired);
 
-
     [[maybe_unused]] void setInputRecordsDelimiter(const char* inputRecordsDelimiter);
-
-
-    [[maybe_unused]] void setHostsPrefix(const char* hostsPrefix);
-
-    [[maybe_unused]] void setSubnetsPrefix(const char* subnetsPrefix);
-
-    [[maybe_unused]] void setRangesPrefix(const char* rangesPrefix);
-
-    [[maybe_unused]] void setSuffix(const char* suffix);
-
 
     [[nodiscard]] Converter<uint32_t> getIPv4Converter() const;
 };

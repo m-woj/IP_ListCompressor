@@ -6,11 +6,11 @@ class Host {
     SizeT value;
 
 public:
-    static Host<SizeT> createFromInitialValue(SizeT initialValue) {
+    [[nodiscard]] static Host<SizeT> createFromInitialValue(SizeT initialValue) {
         return Host(initialValue);
     }
 
-    SizeT getValue() const {
+    [[nodiscard]] SizeT getValue() const {
         return value;
     }
 

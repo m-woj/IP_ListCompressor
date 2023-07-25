@@ -3,13 +3,13 @@
 
 template<class SizeT>
 struct SubnetTransformer {
-    SizeT getSubnetSizeFromMaskLength(unsigned char maskLength) {};
+    static SizeT getSubnetSizeFromMaskLength(unsigned char maskLength) {};
 
-    unsigned char getMaskLengthFromSubnetSize(SizeT subnetSize) {};
+    static unsigned char getMaskLengthFromSubnetSize(SizeT subnetSize) {};
 
-    SizeT getLastValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) {};
+    static SizeT getLastValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) {};
 
-    SizeT getSubnetAddressValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) {};
+    static SizeT getSubnetAddressValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) {};
 };
 
 
