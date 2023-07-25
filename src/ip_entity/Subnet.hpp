@@ -1,6 +1,6 @@
 #pragma once
 
-#include "consts.hpp"
+#include "../consts.hpp"
 #include "Range.hpp"
 #include "SubnetTransformer.hpp"
 

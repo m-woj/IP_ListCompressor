@@ -14,7 +14,7 @@ const char* AddressTransformerIPv4::convertFromValueToText(uint32_t value, char*
 }
 
 
-void AddressTransformerIPv4::convertToText(Range<uint32_t> range, char* const textBuffer) {
+void AddressTransformerIPv4::convertToText(const Range<uint32_t>& range, char* const textBuffer) {
     AddressTransformerIPv4::convertFromValueToText(range.getFirstValue(), textBuffer);
     auto bufferEnd = textBuffer + std::strlen(textBuffer);
 
@@ -24,7 +24,7 @@ void AddressTransformerIPv4::convertToText(Range<uint32_t> range, char* const te
 }
 
 
-void AddressTransformerIPv4::convertToText(Subnet<uint32_t> subnet, char* const textBuffer) {
+void AddressTransformerIPv4::convertToText(const Subnet<uint32_t>& subnet, char* const textBuffer) {
     AddressTransformerIPv4::convertFromValueToText(subnet.getFirstValue(), textBuffer);
     auto bufferEnd = textBuffer + std::strlen(textBuffer);
 
