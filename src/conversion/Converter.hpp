@@ -4,27 +4,39 @@
 #include <forward_list>
 #include <vector>
 
-#include "ip_entity/IPRecord.hpp"
-
 #include "ConverterConfig.hpp"
+#include "../ip_entity/ip_v4/HostIPv4.hpp"
+#include "../ip_entity/ip_v4/RangeIPv4.hpp"
+#include "../ip_entity/ip_v4/SubnetIPv4.hpp"
 
 
+template<class HostT, class RangeT, class SubnetT>
 class Converter {
     const ConverterConfig config;
 
-    void* hosts{};
-    void* subnets{};
-    void* ranges{};
+    std::vector<HostT> hosts{};
+    std::vector<RangeT> ranges{};
+    std::vector<SubnetT> subnets{};
 
 public:
     static Converter createFromConverterConfig(ConverterConfig converterConfig) {
         return Converter(converterConfig);
     };
 
-    void addInput(std::string&& input);
+    void addInput(std::string& input);
 
-    std::forward_list<IPRecord> getConverted();
+    std::vector<HostT>& getConvertedHosts() {
+        return hosts;
+    }
+
+    std::vector<RangeT>& getConvertedRanges() {
+        return ranges;
+    }
+
+    std::vector<SubnetT>& getConvertedSubnets() {
+        return subnets;
+    }
 
 protected:
-    explicit Converter(ConverterConfig converterConfig);
+    explicit Converter(ConverterConfig converterConfig) : config(converterConfig) {};
 };

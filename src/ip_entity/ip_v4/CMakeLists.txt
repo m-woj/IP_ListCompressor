@@ -9,7 +9,6 @@ project(${PROJECT_NAME})
 add_compile_options(-Wall -Wextra -Wconversion -Wsign-conversion -Wpedantic -Weffc++)
 
 add_library(${PROJECT_NAME}
-        AddressTransformerIPv4.cpp
         SubnetTransformerIPv4.cpp
         SubnetIPv4.cpp
         RangeIPv4.cpp

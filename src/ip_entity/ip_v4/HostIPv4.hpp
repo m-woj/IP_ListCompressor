@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../HostAbstract.hpp"
+#include "../Host.hpp"
 
 
 class HostIPv4: public HostAbstract<uint32_t> {

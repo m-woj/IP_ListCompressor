@@ -4,7 +4,7 @@
 template<class ContainerT>
 class ConvertingStrategy {
 public:
-    virtual ContainerT convert(ContainerT& input) = 0;
+    virtual ContainerT& convert(ContainerT& input) = 0;
 
     virtual ~ConvertingStrategy() = default;
 };

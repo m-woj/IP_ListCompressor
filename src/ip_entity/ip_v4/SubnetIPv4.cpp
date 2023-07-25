@@ -8,9 +8,9 @@ AddressTransformerIPv4 addressTransformerImplementation = AddressTransformerIPv4
 SubnetTransformerIPv4 subnetTransformerImplementation = SubnetTransformerIPv4();
 
 
-template<> SubnetTransformer<uint32_t>& SubnetIPv4::SubnetAbstract<uint32_t>::
+template<> SubnetTransformer<uint32_t>& SubnetIPv4::Subnet<uint32_t>::
         subnetTransformer = subnetTransformerImplementation;
-template<> AddressTransformer<uint32_t>& SubnetIPv4::SubnetAbstract<uint32_t>::RangeAbstract<uint32_t>::
+template<> AddressTransformer<uint32_t>& SubnetIPv4::Subnet<uint32_t>::Range<uint32_t>::
         addressTransformer = addressTransformerImplementation;
 
 
@@ -33,5 +33,5 @@ SubnetIPv4 SubnetIPv4::createFromFirstValueAndMaskLength(uint32_t firstValue, ui
 
 
 IPText *SubnetIPv4::getAsText() {
-    return RangeAbstract::getAsText();
+    return Range::getAsText();
 }

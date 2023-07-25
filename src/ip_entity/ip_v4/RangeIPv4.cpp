@@ -7,7 +7,7 @@
 
 AddressTransformerIPv4 addressTransformerIPv4 = AddressTransformerIPv4();
 
-template<> AddressTransformer<uint32_t>& RangeIPv4::RangeAbstract<uint32_t>::
+template<> AddressTransformer<uint32_t>& RangeIPv4::Range<uint32_t>::
         addressTransformer = addressTransformerIPv4;
 
 

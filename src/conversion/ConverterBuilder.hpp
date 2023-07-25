@@ -34,5 +34,5 @@ public:
     [[maybe_unused]] void setSuffix(const char* suffix);
 
 
-    [[nodiscard]] Converter get() const;
+    [[nodiscard]] Converter<HostIPv4, RangeIPv4, SubnetIPv4> getIPv4Converter() const;
 };
