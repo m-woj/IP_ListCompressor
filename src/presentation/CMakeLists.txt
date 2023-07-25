@@ -8,4 +8,5 @@ project(${PROJECT_NAME})
 
 add_library(${PROJECT_NAME}
         PresenterBuilder.cpp
+        ip_v4/AddressTransformerIPv4.cpp
         )

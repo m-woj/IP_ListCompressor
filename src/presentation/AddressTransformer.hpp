@@ -1,58 +1,42 @@
 #pragma once
 
+#include <cstdint>
 
-#include "IPText.hpp"
+#include "ip_v4/AddressTransformerIPv4.hpp"
 
 
 template<class SizeT>
 class AddressTransformer {
 public:
-    virtual const char* convertFromValueToText(SizeT value, char* textBuffer) = 0;
+    static const char* convertFromValueToText(SizeT value, char* textBuffer);
 
-    virtual ~AddressTransformer() = default;
+    static const char* convertToText(Host<SizeT> host, char* textBuffer);
 
-    IPText getAsText() override {
-        char contentBuffer[IP_RANGE_SIZE];
-        addressTransformer.convertFromValueToText(firstValue, contentBuffer);
-        std::strcat(contentBuffer, RANGE_DELIMITER_SIGN);
+    static const char* convertToText(Range<SizeT> range, char* textBuffer);
 
-        auto endOfContentBuffer = contentBuffer + std::strlen(contentBuffer);
-        addressTransformer.convertFromValueToText(lastValue, endOfContentBuffer);
+    static const char* convertToText(Subnet<SizeT> host, char* textBuffer);
+};
 
-        auto textForm = IPText::createFromContent(contentBuffer);
-        textForm.addPrefix(prefix);
-        textForm.addSuffix(suffix);
 
-        return textForm;
+template<>
+class AddressTransformer<uint32_t> {
+public:
+    static const char* convertFromValueToText(uint32_t value, char* textBuffer) {
+        return AddressTransformerIPv4::convertFromValueToText(value, textBuffer);
     }
 
-    IPText getAsText() override {
-        char contentBuffer[IP_RANGE_SIZE];
-        addressTransformer.convertFromValueToText(intValue, contentBuffer);
-
-        auto textForm = IPText::createFromContent(contentBuffer);
-        textForm.addPrefix(prefix);
-        textForm.addSuffix(suffix);
-
-        return textForm;
+    static const char* convertToText(Host<uint32_t> host, char* textBuffer) {
+        AddressTransformerIPv4::convertToText(host, textBuffer);
+        return textBuffer;
     }
 
-    IPText getAsText() override {
-        char contentBuffer[IP_RANGE_SIZE];
-        RangeAbstract<SizeT>::addressTransformer.convertFromValueToText(
-                RangeAbstract<SizeT>::firstValue, contentBuffer);
-        std::strcat(contentBuffer, SUBNET_AND_MASK_DELIMITER);
+    static const char* convertToText(Range<uint32_t> range, char* textBuffer) {
+        AddressTransformerIPv4::convertToText(range, textBuffer);
+        return textBuffer;
+    }
 
-        const auto&& contentLength = std::strlen(contentBuffer);
-        const auto&& remainingChars = IP_RANGE_SIZE - contentLength;
-
-        auto buffer = contentBuffer + contentLength;
-        std::to_chars(buffer, buffer + remainingChars, maskLength);
-
-        auto textForm = IPText::createFromContent(contentBuffer);
-        textForm.addPrefix(prefix);
-        textForm.addSuffix(suffix);
-
-        return textForm;
+    static const char* convertToText(Subnet<uint32_t> subnet, char* textBuffer) {
+        AddressTransformerIPv4::convertToText(subnet, textBuffer);
+        return textBuffer;
     }
 };

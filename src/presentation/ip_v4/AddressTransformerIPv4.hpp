@@ -1,10 +1,19 @@
 #pragma once
 
+#include "../../consts.hpp"
 
-#include "../AddressTransformer.hpp"
+#include "../../ip_entity/Host.hpp"
+#include "../../ip_entity/Range.hpp"
+#include "../../ip_entity/Subnet.hpp"
 
 
-class AddressTransformerIPv4 : public AddressTransformer<uint32_t> {
+class AddressTransformerIPv4 {
 public:
-    const char* convertFromValueToText(uint32_t value, char* textBuffer) override;
+    static const char* convertFromValueToText(uint32_t value, char* textBuffer);
+
+    static void convertToText(Host<uint32_t> host, char* textBuffer);
+
+    static void convertToText(Range<uint32_t> range, char* textBuffer);
+
+    static void convertToText(Subnet<uint32_t> host, char* textBuffer);
 };
