@@ -16,7 +16,7 @@ public:
 
     [[nodiscard]] static Range<SizeT> createFromFirstAndLastHost(Host<SizeT> firstHost, Host<SizeT> lastHost) {
         if (firstHost.getValue() > lastHost.getValue()) {
-            throw std::logic_error("First host value cannot be bigger than last host value");
+            std::swap(firstHost, lastHost);
         }
 
         return Range(firstHost, lastHost);

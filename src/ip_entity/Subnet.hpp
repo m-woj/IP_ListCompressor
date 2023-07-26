@@ -12,7 +12,8 @@ class Subnet {
     unsigned char maskLength;
 
 public:
-    [[nodiscard]] static Subnet<SizeT> createFromInitialValueAndMaskLength(SizeT initialValue, unsigned char maskLength) {
+    [[nodiscard]] static Subnet<SizeT>
+            createFromInitialValueAndMaskLength(SizeT initialValue, unsigned char maskLength) {
         return Subnet<SizeT>(initialValue, maskLength);
     }
 
