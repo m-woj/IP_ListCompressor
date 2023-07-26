@@ -4,8 +4,8 @@
 #define RANGE_DELIMITER_SIGN '-'
 #define SUBNET_AND_MASK_DELIMITER '/'
 
-#define DEFAULT_SUFFIX '\n'
-#define DEFAULT_PREFIX ''
+#define DEFAULT_SUFFIX "\n"
+#define DEFAULT_PREFIX ""
 
 #define IPV4_MAX_LENGTH 15
 #define IPV6_MAX_LENGTH 39

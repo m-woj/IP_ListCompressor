@@ -6,6 +6,8 @@ class Host {
     SizeT value;
 
 public:
+    Host() = default;
+
     [[nodiscard]] static Host<SizeT> createFromInitialValue(SizeT initialValue) {
         return Host(initialValue);
     }

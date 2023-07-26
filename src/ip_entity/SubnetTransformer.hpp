@@ -39,10 +39,8 @@ template<> uint32_t getSubnetSizeFromMaskLength<uint32_t>(uint8_t maskLength) {
     return subnetSize;
 }
 
-template<class SizeT>
-unsigned char getMaskLengthFromSubnetSize(SizeT subnetSize);
 
-template<> unsigned char getMaskLengthFromSubnetSize(uint32_t subnetSize) {
+unsigned char getMaskLengthFromSubnetSize(uint32_t subnetSize) {
     assert(isValidSubnetSize(subnetSize));
 
     unsigned char maskLength = 33;
@@ -64,7 +62,7 @@ struct SubnetTransformer {
     static unsigned char getMaskLengthFromSubnetSize(SizeT subnetSize) {
         assert(isValidSubnetSize(subnetSize));
 
-        return ::getMaskLengthFromSubnetSize<SizeT>(subnetSize);
+        return ::getMaskLengthFromSubnetSize(subnetSize);
     }
 
     static SizeT getLastValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) {
