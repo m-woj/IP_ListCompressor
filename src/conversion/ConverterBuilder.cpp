@@ -4,11 +4,6 @@
 #include "ConverterBuilder.hpp"
 
 
-void ConverterBuilder::setIPv6Requirement(bool IPv6Requirement) {
-    this->converterConfig.IPv6Required = IPv6Requirement;
-}
-
-
 void ConverterBuilder::setMultithreadingRequirement(bool multithreadingRequirement) {
     this->converterConfig.multithreadingRequired = multithreadingRequirement;
 }

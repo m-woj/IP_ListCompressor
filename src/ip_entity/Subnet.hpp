@@ -2,7 +2,7 @@
 
 #include "../consts.hpp"
 #include "Range.hpp"
-#include "SubnetTransformer.hpp"
+#include "subnet_transformer/SubnetTransformer.hpp"
 
 
 template<class SizeT>

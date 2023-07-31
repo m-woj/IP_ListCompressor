@@ -1,10 +1,9 @@
 #pragma once
 
-#include "consts.hpp"
+#include "../consts.hpp"
 
 
 struct ConverterConfig {
-    bool IPv6Required = false;
     bool multithreadingRequired = false;
 
     bool compressionRequired = true;

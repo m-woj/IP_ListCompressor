@@ -1,80 +1,39 @@
 #pragma once
 
 #include <cassert>
+#include <cstdint>
 
-#ifndef NDEBUG
-#include <cmath>
+#include "../../utils/SubnetUtils.hpp"
 
-bool isValidSubnetSize(uint32_t subnetSize) {
-    if (subnetSize == 0) {
-        return false;
-    }
-
-    if (subnetSize == 1) {
-        return true;
-    }
-
-    //check if a subnetSize is a power of 2
-    auto exponent = std::log2(subnetSize);
-    if (floor(exponent) != ceil(exponent)) {
-        return false;
-    }
-
-    return true;
-}
-
-#endif
+#include "SubnetTransformerIPv4.hpp"
 
 
 template<class SizeT>
-SizeT getSubnetSizeFromMaskLength(uint8_t maskLength);
-
-template<> uint32_t getSubnetSizeFromMaskLength<uint32_t>(uint8_t maskLength) {
-    assert(maskLength > 0);
-
-    uint8_t&& power = (32 - maskLength);
-    uint32_t subnetSize = 1;
-    subnetSize <<= power;
-
-    return subnetSize;
-}
+class SubnetTransformer {};
 
 
-unsigned char getMaskLengthFromSubnetSize(uint32_t subnetSize) {
-    assert(isValidSubnetSize(subnetSize));
-
-    unsigned char maskLength = 33;
-    while (subnetSize != 0) {
-        maskLength--;
-        subnetSize >>= 1;
+template<> class SubnetTransformer<uint32_t> {
+public:
+    static uint32_t getSubnetSizeFromMaskLength(unsigned char maskLength) {
+        return SubnetTransformerIPv4::getSubnetSizeFromMaskLength(maskLength);
     }
 
-    return maskLength;
-}
+    static unsigned char getMaskLengthFromSubnetSize(uint32_t subnetSize) {
+        assert(SubnetUtils::isValidSubnetSize(subnetSize));
 
-
-template<class SizeT>
-struct SubnetTransformer {
-    static SizeT getSubnetSizeFromMaskLength(unsigned char maskLength) {
-        return ::getSubnetSizeFromMaskLength<SizeT>(maskLength);
+        return SubnetTransformerIPv4::getMaskLengthFromSubnetSize(subnetSize);
     }
 
-    static unsigned char getMaskLengthFromSubnetSize(SizeT subnetSize) {
-        assert(isValidSubnetSize(subnetSize));
-
-        return ::getMaskLengthFromSubnetSize(subnetSize);
-    }
-
-    static SizeT getLastValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) {
-        assert(isValidSubnetSize(subnetSize));
+    static uint32_t getLastValueFromFirstValueAndSubnetSize(uint32_t firstValue, uint32_t subnetSize) {
+        assert(SubnetUtils::isValidSubnetSize(subnetSize));
 
         return firstValue + subnetSize - 1;
     }
 
-    static SizeT getSubnetAddressValueFromFirstValueAndSubnetSize(SizeT firstValue, SizeT subnetSize) {
-        assert(isValidSubnetSize(subnetSize));
+    static uint32_t getSubnetAddressValueFromFirstValueAndSubnetSize(uint32_t firstValue, uint32_t subnetSize) {
+        assert(SubnetUtils::isValidSubnetSize(subnetSize));
 
-        SizeT&& multiplicity = firstValue / subnetSize;
+        uint32_t&& multiplicity = firstValue / subnetSize;
         return multiplicity * subnetSize;
     }
 };

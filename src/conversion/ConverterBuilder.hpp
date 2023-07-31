@@ -8,8 +8,6 @@ class ConverterBuilder {
     ConverterConfig converterConfig;
 
 public:
-    [[maybe_unused]] void setIPv6Requirement(bool IPv6Requirement);
-
     [[maybe_unused]] void setMultithreadingRequirement(bool multithreadingRequirement);
 
 
