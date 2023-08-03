@@ -12,9 +12,4 @@ struct ConverterConfig {
     bool purificationOnlyRequired = false;
 
     char inputRecordsDelimiter[RECORDS_DELIMITER_SIZE] = "";
-
-    char hostsPrefix[RECORD_DECORATOR_SIZE] = "";
-    char subnetsPrefix[RECORD_DECORATOR_SIZE] = "";
-    char rangesPrefix[RECORD_DECORATOR_SIZE] = "";
-    char suffix[RECORD_DECORATOR_SIZE] = "";
 };
