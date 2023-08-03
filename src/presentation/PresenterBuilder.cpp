@@ -5,7 +5,7 @@
 
 
 void PresenterBuilder::setHostsPrefix(const char* hostsPrefix) {
-    BuilderUtils::setIfPossible(hostsPrefix,
+    BuilderUtils::setOrThrowException(hostsPrefix,
                   this->presenterConfig.hostsPrefix,
                   RECORD_DECORATOR_MAX_LENGTH,
                   "Host prefix is too long.");
@@ -13,7 +13,7 @@ void PresenterBuilder::setHostsPrefix(const char* hostsPrefix) {
 
 
 void PresenterBuilder::setSubnetsPrefix(const char* subnetsPrefix) {
-    BuilderUtils::setIfPossible(subnetsPrefix,
+    BuilderUtils::setOrThrowException(subnetsPrefix,
                   this->presenterConfig.subnetsPrefix,
                   RECORD_DECORATOR_MAX_LENGTH,
                   "Subnet prefix is too long.");
@@ -21,7 +21,7 @@ void PresenterBuilder::setSubnetsPrefix(const char* subnetsPrefix) {
 
 
 void PresenterBuilder::setRangesPrefix(const char* rangesPrefix) {
-    BuilderUtils::setIfPossible(rangesPrefix,
+    BuilderUtils::setOrThrowException(rangesPrefix,
                   this->presenterConfig.rangesPrefix,
                   RECORD_DECORATOR_MAX_LENGTH,
                   "Range prefix is too long.");
@@ -29,7 +29,7 @@ void PresenterBuilder::setRangesPrefix(const char* rangesPrefix) {
 
 
 void PresenterBuilder::setSuffix(const char* suffix) {
-    BuilderUtils::setIfPossible(suffix,
+    BuilderUtils::setOrThrowException(suffix,
                   this->presenterConfig.suffix,
                   RECORD_DECORATOR_MAX_LENGTH,
                   "Suffix is too long.");

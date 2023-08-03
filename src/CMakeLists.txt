@@ -1,7 +1,21 @@
-add_library(${PROJECT_NAME}_src
-        main.cpp Host.cpp Subnet.cpp Range.cpp DataSource.cpp ConfigurationManagerBase.cpp Compressor.cpp OutputManager.cpp
-        RawRecordsRecognizer.cpp RecordsProducer.cpp DataProvider.cpp ConfigurationProvider.cpp ConfigurationManager.cpp
-        )
+cmake_minimum_required(VERSION 3.25)
 
+set(PROJECT_NAME                src)
+set(CMAKE_CXX_STANDARD          23)
+set(CMAKE_CXX_EXTENSIONS        OFF)
 
+project(${PROJECT_NAME})
+
+add_library(${PROJECT_NAME} INTERFACE)
+
+add_subdirectory(ip_entity)
+add_subdirectory(logging)
 add_subdirectory(conversion)
+add_subdirectory(presentation)
+
+target_link_libraries(${PROJECT_NAME} INTERFACE
+        ip_entity
+        logging
+        conversion
+        presentation
+)

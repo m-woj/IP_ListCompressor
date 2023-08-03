@@ -5,7 +5,7 @@
 
 
 class ConverterBuilder {
-    ConverterConfig converterConfig;
+    ConverterConfig converterConfig{};
 
 public:
     [[maybe_unused]] void setMultithreadingRequirement(bool multithreadingRequirement);

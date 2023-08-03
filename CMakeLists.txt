@@ -5,7 +5,6 @@ set(PROJECT_NAME ListCompressor)
 set(CMAKE_CXX_STANDARD          23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS        OFF)
-set(Boost_USE_STATIC_LIBS       ON)
 
 project(${PROJECT_NAME})
 
@@ -16,19 +15,11 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Release")
 endif()
 
 add_subdirectory(src)
+include_directories(src)
+add_executable(${PROJECT_NAME} main.cpp)
 
-if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    include_directories(src)
-    add_subdirectory(tests)
-else ()
-    add_executable(${PROJECT_NAME} src/main.cpp)
-endif()
-
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_SEARCH_START_STATIC ON)
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_SEARCH_END_STATIC ON)
 target_link_options(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++ -static)
 
-find_package(Boost COMPONENTS program_options REQUIRED)
 target_link_libraries(${PROJECT_NAME}
-        ${PROJECT_NAME}_src
+    src
         )

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-set(PROJECT_NAME ip_v4_test)
+set(PROJECT_NAME test_subnet_transformer)
 
 project(${PROJECT_NAME})
 
@@ -14,10 +14,12 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+add_subdirectory(../../subnet_transformer subnet_transformer_build)
+
 add_executable(${PROJECT_NAME}
         TestSubnetTransformer.cpp)
 
-target_link_libraries(${PROJECT_NAME} GTest::gtest_main)
+target_link_libraries(${PROJECT_NAME} GTest::gtest_main subnet_transformer)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

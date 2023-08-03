@@ -30,10 +30,10 @@ void ConverterBuilder::setPurificationOnlyRequirement(bool purificationOnlyRequi
 
 
 void ConverterBuilder::setInputRecordsDelimiter(const char* inputRecordsDelimiter) {
-    BuilderUtils::setIfPossible(inputRecordsDelimiter,
-                  this->converterConfig.inputRecordsDelimiter,
-                  RECORDS_DELIMITER_MAX_LENGTH,
-                  "Input records delimiter is too long.");
+    BuilderUtils::setOrThrowException(inputRecordsDelimiter,
+                                      this->converterConfig.inputRecordsDelimiter,
+                                      RECORDS_DELIMITER_MAX_LENGTH,
+                                      "Input records delimiter is too long.");
 }
 
 

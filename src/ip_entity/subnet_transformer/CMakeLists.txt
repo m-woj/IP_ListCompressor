@@ -6,6 +6,6 @@ set(CMAKE_CXX_EXTENSIONS        OFF)
 
 project(${PROJECT_NAME})
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} STATIC
         SubnetTransformerIPv4.cpp
         )
