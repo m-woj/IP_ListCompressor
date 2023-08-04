@@ -1,8 +1,14 @@
 #include <CLI/CLI.hpp>
 
-#include "../consts.hpp"
+#include <iostream>
 
+#include "validators.hpp"
 #include "ConfigurationProvider.hpp"
+
+
+const static PrefixMaxLengthValidator prefixMaxLengthValidator;
+const static SuffixMaxLengthValidator suffixMaxLengthValidator;
+const static RecordsDelimiterMaxLengthValidator recordsDelimiterMaxLengthValidator;
 
 
 void setOptions(CLI::App& app, Configuration& configuration);
@@ -18,16 +24,26 @@ ConfigurationProvider ConfigurationProvider::createWithInputArguments(int argc, 
 
 
 ConfigurationProvider::ConfigurationProvider(int argc, const char* argv[]) {
-    CLI::App app;
+    CLI::App app {
+            "This program is designed to conduct converting operations "
+            "on lists of IP hosts, subnets and ranges. It gives the possibility to validate "
+            "and compress such feeds into one."
+    };
 
     setOptions(app, configuration);
 
-//    CLI11_PARSE(app, argc, argv);
+    try {
+        app.parse(argc, argv);
+    } catch (const CLI::ParseError &e) {
+        isValid = false;
+        std::cerr << e.what();
+    }
 }
 
-
-const Configuration &ConfigurationProvider::getConfiguration() const {
-    return configuration;
+std::optional<std::reference_wrapper<const Configuration>> ConfigurationProvider::tryGetConfiguration() const {
+    return isValid
+        ? std::optional<std::reference_wrapper<const Configuration>>{configuration}
+        : std::nullopt;
 }
 
 
@@ -56,20 +72,27 @@ void setDataConverterOptions(CLI::App& app, Configuration& configuration) {
                    "Set ranges building requirement.");
     app.add_option("-po,--purificationOnly", configuration.purificationOnlyRequired,
                    "Set purification only requirement.");
+
     app.add_option("-d,--inputRecordsDelimiter", configuration.inputRecordsDelimiter,
-                   "Set input records delimiter.");
+                   "Set input records delimiter.")
+                   ->check(recordsDelimiterMaxLengthValidator);
 }
 
 
 void setPresenterOptions(CLI::App& app, Configuration& configuration) {
     app.add_option("-hp,--hostsPrefix", configuration.hostsPrefix,
-                   "Set host prefix added in an output.");
+                   "Set host prefix added in an output.")
+                   ->check(prefixMaxLengthValidator);
     app.add_option("-sp,--subnetsPrefix", configuration.subnetsPrefix,
-                   "Set subnet prefix added in an output.");
+                   "Set subnet prefix added in an output.")
+                    ->check(prefixMaxLengthValidator);
     app.add_option("-rp,--rangesPrefix", configuration.rangesPrefix,
-                   "Set range prefix added in an output.");
+                   "Set range prefix added in an output.")
+                    ->check(prefixMaxLengthValidator);
+
     app.add_option("-s,--suffix", configuration.suffix,
-                   "Set record suffix added in an output.");
+                   "Set record suffix added in an output.")
+                    ->check(suffixMaxLengthValidator);
 }
 
 
