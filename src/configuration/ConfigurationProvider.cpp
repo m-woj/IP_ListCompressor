@@ -1,9 +1,15 @@
 #include <CLI/CLI.hpp>
 
+#include "../consts.hpp"
+
 #include "ConfigurationProvider.hpp"
 
 
 void setOptions(CLI::App& app, Configuration& configuration);
+void setDataProviderOptions(CLI::App& app, Configuration& configuration);
+void setDataConverterOptions(CLI::App& app, Configuration& configuration);
+void setPresenterOptions(CLI::App& app, Configuration& configuration);
+void setOtherOptions(CLI::App& app, Configuration& configuration);
 
 
 ConfigurationProvider ConfigurationProvider::createWithInputArguments(int argc, const char* argv[]) {
@@ -26,11 +32,20 @@ const Configuration &ConfigurationProvider::getConfiguration() const {
 
 
 void setOptions(CLI::App& app, Configuration& configuration) {
-    //  Data Provider
-    app.add_option("-i,--inputDataFiles", configuration.inputDataFileURLs,
-                   "A list of URLs with input data.");
+    setDataProviderOptions(app, configuration);
+    setDataConverterOptions(app, configuration);
+    setPresenterOptions(app, configuration);
+    setOtherOptions(app, configuration);
+}
 
-    //  Converter
+
+void setDataProviderOptions(CLI::App& app, Configuration& configuration) {
+    app.add_option("-i,--inputDataFiles", configuration.inputDataFileURLs,
+                   "A list of paths to files containing input data.");
+}
+
+
+void setDataConverterOptions(CLI::App& app, Configuration& configuration) {
     app.add_option("-m,--multithreading", configuration.multithreadingRequired,
                    "Set multithreading requirement.");
     app.add_option("-c,--compression", configuration.compressionRequired,
@@ -43,8 +58,10 @@ void setOptions(CLI::App& app, Configuration& configuration) {
                    "Set purification only requirement.");
     app.add_option("-d,--inputRecordsDelimiter", configuration.inputRecordsDelimiter,
                    "Set input records delimiter.");
+}
 
-    //  Presenter
+
+void setPresenterOptions(CLI::App& app, Configuration& configuration) {
     app.add_option("-hp,--hostsPrefix", configuration.hostsPrefix,
                    "Set host prefix added in an output.");
     app.add_option("-sp,--subnetsPrefix", configuration.subnetsPrefix,
@@ -53,8 +70,11 @@ void setOptions(CLI::App& app, Configuration& configuration) {
                    "Set range prefix added in an output.");
     app.add_option("-s,--suffix", configuration.suffix,
                    "Set record suffix added in an output.");
+}
 
-    //Other
+
+void setOtherOptions(CLI::App& app, Configuration& configuration) {
     app.add_option("-o,--outputFilePath", configuration.inputDataFileURLs,
-                   "Output file path.");
+                   "Output file path.")
+            ->check(CLI::Validator(CLI::NonexistentPath));
 }
