@@ -1,5 +1,9 @@
 #pragma once
 
+#define APP_DESCRIPTION \
+    "This program is designed to conduct converting operations " \
+    "on lists of IP hosts, subnets and ranges. It gives the possibility to validate " \
+    "and compress such feeds into one."
 
 #define RANGE_DELIMITER_SIGN '-'
 #define SUBNET_AND_MASK_DELIMITER '/'

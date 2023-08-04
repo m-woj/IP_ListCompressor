@@ -8,11 +8,11 @@ class ConverterFacade {
     const ConfigurationProvider configurationProvider;
 
 public:
-    static ConverterFacade createWithInputArguments(int argc, const char* argv[]);
+    static ConverterFacade createFromInputArguments(int argc, const char* argv[]);
 
     void convert() const;
 
 private:
     ConverterFacade(int argc, const char* argv[]):
-        configurationProvider(ConfigurationProvider::createWithInputArguments(argc, argv)) {};
+        configurationProvider(ConfigurationProvider::createFromInputArguments(argc, argv)) {};
 };

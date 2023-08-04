@@ -6,11 +6,11 @@
 
 
 class ConfigurationProvider {
-    Configuration configuration;
+    Configuration configuration{};
     bool isValid = true;
 
 public:
-    static ConfigurationProvider createWithInputArguments(int argc, const char* argv[]);
+    static ConfigurationProvider createFromInputArguments(int argc, const char* argv[]);
 
     [[nodiscard]] std::optional<std::reference_wrapper<const Configuration>> tryGetConfiguration() const;
 
