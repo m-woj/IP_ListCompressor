@@ -58,15 +58,15 @@ void setDataProviderOptions(CLI::App& app, Configuration& configuration) {
 
 
 void setDataConverterOptions(CLI::App& app, Configuration& configuration) {
-    app.add_option("-m,--multithreading", configuration.multithreadingRequired,
+    app.add_flag("-m,--multithreading", configuration.multithreadingRequired,
                    "Enable multithreading.");
-    app.add_option("-c,--compress", configuration.compressionRequired,
+    app.add_flag("-c,--compress", configuration.compressionRequired,
                    "Compress feeds.");
-    app.add_option("--decomposeRanges", configuration.rangesDecompositionRequired,
+    app.add_flag("--decomposeRanges", configuration.rangesDecompositionRequired,
                    "Decompose ranges to hosts and subnets.");
-    app.add_option("--buildRanges", configuration.rangesBuildingRequired,
+    app.add_flag("--buildRanges", configuration.rangesBuildingRequired,
                    "Build ranges from hosts and subnets.");
-    app.add_option("--validationOnly", configuration.purificationOnlyRequired,
+    app.add_flag("--validationOnly", configuration.purificationOnlyRequired,
                    "Validate (delete invalid records) and merge only.");
 
     app.add_option("-d,--inputRecordsDelimiter", configuration.inputRecordsDelimiter,
@@ -95,5 +95,5 @@ void setPresenterOptions(CLI::App& app, Configuration& configuration) {
 void setOtherOptions(CLI::App& app, Configuration& configuration) {
     app.add_option("-o,--outputFilePath", configuration.inputDataFileURLs,
                    "Output file path.")
-            ->check(CLI::Validator(CLI::NonexistentPath));
+                    ->check(CLI::Validator(CLI::NonexistentPath));
 }

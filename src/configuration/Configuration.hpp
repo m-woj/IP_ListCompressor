@@ -1,14 +1,14 @@
 #pragma once
 
 #include <string>
-#include <forward_list>
+#include <vector>
 
 #include "../consts.hpp"
 
 
 struct Configuration {
     //  Data Provider
-    std::forward_list<std::string> inputDataFileURLs;
+    std::vector<std::string> inputDataFileURLs;
 
     //  Converter
     bool multithreadingRequired;
