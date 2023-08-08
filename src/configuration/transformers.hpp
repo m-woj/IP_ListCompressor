@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include <regex>
+#include <utility>
+#include <array>
 
 #include "CLI/CLI.hpp"
 
@@ -10,15 +11,21 @@ void replaceAll(std::string& str, const std::string& from, const std::string& to
 
 
 std::string rawSpecialCharactersToWorkingSpecialCharacters(std::string input) {
-    replaceAll(input, "\\n", "\n");
-    replaceAll(input, "\\t", "\t");
-    replaceAll(input, "\\v", "\v");
-    replaceAll(input, "\\r\\n", "\r\n");
-    replaceAll(input, "\\\\", "\\");
-    replaceAll(input, "\\'", "\'");
-    replaceAll(input, "\\\"", "\"");
-    replaceAll(input, "\\v", "\v");
-    replaceAll(input, "\\\?", "\?");
+    using chacterPair = std::pair<std::string, std::string>;
+    std::array pairs = {
+            chacterPair{"\\n", "\n"},
+            chacterPair{"\\t", "\t"},
+            chacterPair{"\\v", "\v"},
+            chacterPair{"\\r\\n", "\r\n"},
+            chacterPair{"\\\\", "\\"},
+            chacterPair{"\\'", "\'"},
+            chacterPair{"\\\"", "\""},
+            chacterPair{"\\\?", "\?"},
+    };
+
+    for(const auto& pair : pairs) {
+        replaceAll(input, pair.first, pair.second);
+    }
 
     return input;
 }
