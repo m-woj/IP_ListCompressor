@@ -82,12 +82,12 @@ TEST(ConfigurationProvider, validSuffix) {
 }
 
 TEST(ConfigurationProvider, specialCharacterSuffix) {
-    const char* suffix = u8"\\n,"; //Form inputted from std input
+    const char* suffix = R"(\n \t,)"; //Form inputted from std input
     constexpr int argc = 3;
     const char* argv[argc] = {APP_NAME, "--suffix", suffix};
 
     auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
     auto config = configProvider.tryGetConfiguration();
 
-    ASSERT_STREQ("\n", config->get().suffix.c_str());
+    ASSERT_STREQ("\n \t,", config->get().suffix.c_str());
 }

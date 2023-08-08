@@ -72,24 +72,29 @@ void setDataConverterOptions(CLI::App& app, Configuration& configuration) {
 
     app.add_option("-d,--inputRecordsDelimiter", configuration.inputRecordsDelimiter,
                    "Set input records delimiter.")
-                   ->check(recordsDelimiterMaxLengthValidator);
+            ->check(recordsDelimiterMaxLengthValidator)
+            ->transform(rawSpecialCharactersToWorkingSpecialCharacters);
 }
 
 
 void setPresenterOptions(CLI::App& app, Configuration& configuration) {
     app.add_option("--hostsPrefix", configuration.hostsPrefix,
                    "Set host prefix added in an output.")
-                   ->check(prefixMaxLengthValidator);
+            ->check(prefixMaxLengthValidator)
+            ->transform(rawSpecialCharactersToWorkingSpecialCharacters);
     app.add_option("--subnetsPrefix", configuration.subnetsPrefix,
                    "Set subnet prefix added in an output.")
-                    ->check(prefixMaxLengthValidator);
+            ->check(prefixMaxLengthValidator)
+            ->transform(rawSpecialCharactersToWorkingSpecialCharacters);
     app.add_option("--rangesPrefix", configuration.rangesPrefix,
                    "Set range prefix added in an output.")
-                    ->check(prefixMaxLengthValidator);
+            ->check(prefixMaxLengthValidator)
+            ->transform(rawSpecialCharactersToWorkingSpecialCharacters);
 
     app.add_option("--suffix", configuration.suffix,
                    "Set record suffix added in an output.")
-                    ->check(suffixMaxLengthValidator);
+            ->check(suffixMaxLengthValidator)
+            ->transform(rawSpecialCharactersToWorkingSpecialCharacters);
 }
 
 
