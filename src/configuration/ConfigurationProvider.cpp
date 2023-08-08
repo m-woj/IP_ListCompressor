@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "validators.hpp"
+#include "transformers.hpp"
 #include "ConfigurationProvider.hpp"
 
 

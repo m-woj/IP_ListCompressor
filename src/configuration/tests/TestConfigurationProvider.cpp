@@ -2,6 +2,8 @@
 
 #include "../ConfigurationProvider.hpp"
 
+#define APP_NAME "IP_List_Converter"
+
 
 auto testValidConfig = [](auto argc, auto argv){
     auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
@@ -18,32 +20,32 @@ auto testInvalidConfig = [](auto argc, auto argv){
 
 TEST(ConfigurationProvider, invalidArgumentConfig) {
     constexpr int argc = 2;
-    const char* argv[argc] = {"IP_List_Converter", "egg"};
+    const char* argv[argc] = {APP_NAME, "egg"};
     testInvalidConfig(argc, argv);
 }
 
 TEST(ConfigurationProvider, invalidInputConfig) {
     constexpr int argc = 2;
-    const char* argv[argc] = {"IP_List_Converter", "-i"};
+    const char* argv[argc] = {APP_NAME, "-i"};
     testInvalidConfig(argc, argv);
 }
 
 TEST(ConfigurationProvider, emptyValidConfig) {
     constexpr int argc = 1;
-    const char* argv[argc] = {"IP_List_Converter"};
+    const char* argv[argc] = {APP_NAME};
     testValidConfig(argc, argv);
 }
 
 TEST(ConfigurationProvider, mulithreadingValidConfig) {
     constexpr int argc = 2;
-    const char* argv[argc] = {"IP_List_Converter", "-m"};
+    const char* argv[argc] = {APP_NAME, "-m"};
     testValidConfig(argc, argv);
 }
 
 TEST(ConfigurationProvider, inputDataFilesValidConfig) {
     auto path = "/egg/home";
     constexpr int argc = 3;
-    const char* argv[argc] = {"IP_List_Converter", "-i", path};
+    const char* argv[argc] = {APP_NAME, "-i", path};
 
     auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
     auto config = configProvider.tryGetConfiguration();
@@ -54,7 +56,7 @@ TEST(ConfigurationProvider, inputDataFilesValidConfig) {
 TEST(ConfigurationProvider, manyInputDataFilesValidConfig) {
     const char* paths[2] = {"/egg/home", "/egg/source"};
     constexpr int argc = 4;
-    const char* argv[argc] = {"IP_List_Converter", "-i", paths[0], paths[1]};
+    const char* argv[argc] = {APP_NAME, "-i", paths[0], paths[1]};
 
     auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
     auto config = configProvider.tryGetConfiguration();
@@ -68,13 +70,24 @@ TEST(ConfigurationProvider, manyInputDataFilesValidConfig) {
 TEST(ConfigurationProvider, tooLongSuffix) {
     char suffix[RECORD_DECORATOR_SIZE + 1] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     constexpr int argc = 3;
-    const char* argv[argc] = {"IP_List_Converter", "--suffix", suffix};
+    const char* argv[argc] = {APP_NAME, "--suffix", suffix};
     testInvalidConfig(argc, argv);
 }
 
 TEST(ConfigurationProvider, validSuffix) {
     char suffix[RECORD_DECORATOR_SIZE] = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
     constexpr int argc = 3;
-    const char* argv[argc] = {"IP_List_Converter", "--suffix", suffix};
+    const char* argv[argc] = {APP_NAME, "--suffix", suffix};
     testValidConfig(argc, argv);
+}
+
+TEST(ConfigurationProvider, specialCharacterSuffix) {
+    const char* suffix = u8"\\n,"; //Form inputted from std input
+    constexpr int argc = 3;
+    const char* argv[argc] = {APP_NAME, "--suffix", suffix};
+
+    auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
+    auto config = configProvider.tryGetConfiguration();
+
+    ASSERT_STREQ("\n", config->get().suffix.c_str());
 }
