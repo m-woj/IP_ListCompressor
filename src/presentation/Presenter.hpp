@@ -4,9 +4,9 @@
 
 #include "../consts.hpp"
 
-#include "../ip_entity/Host.hpp"
-#include "../ip_entity/Range.hpp"
-#include "../ip_entity/Subnet.hpp"
+#include "../common/ip_entity/Host.hpp"
+#include "../common/ip_entity/Range.hpp"
+#include "../common/ip_entity/Subnet.hpp"
 
 #include "AddressTransformer.hpp"
 #include "PresenterConfig.hpp"
@@ -22,15 +22,15 @@ public:
         return Presenter<SizeT>(config);
     }
 
-    void sendAsTextToStream(const Host<SizeT>& host, std::ostream& outputStream) {
+    void sendAsTextToStream(const Host<SizeT>& host, std::ostream& outputStream) const {
         outputStream << config.hostsPrefix << AddressTransformer<SizeT>::convertToText(host, buffer) << config.suffix;
     }
 
-    void sendAsTextToStream(const Range<SizeT>& range, std::ostream& outputStream) {
+    void sendAsTextToStream(const Range<SizeT>& range, std::ostream& outputStream) const {
         outputStream << config.rangesPrefix << AddressTransformer<SizeT>::convertToText(range, buffer) << config.suffix;
     }
 
-    void sendAsTextToStream(const Subnet<SizeT>& subnet, std::ostream& outputStream) {
+    void sendAsTextToStream(const Subnet<SizeT>& subnet, std::ostream& outputStream) const {
         outputStream << config.subnetsPrefix << AddressTransformer<SizeT>::convertToText(subnet, buffer) << config.suffix;
     }
 

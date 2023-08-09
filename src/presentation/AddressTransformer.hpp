@@ -16,7 +16,7 @@ public:
         return AddressTransformerIPv4::convertFromValueToText(value, textBuffer);
     }
 
-    static const char* convertToText(Host<uint32_t>& host, char* textBuffer) {
+    static const char* convertToText(const Host<uint32_t>& host, char* textBuffer) {
         convertFromValueToText(host.getValue(), textBuffer);
 
         return textBuffer;

@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "ConverterFacade.hpp"
 
 #include "configuration/ConfigurationProvider.hpp"
@@ -30,11 +32,27 @@ Presenter<SizeT> getPresenter(const Configuration& configuration) {
             .getPresenter<SizeT>();
 }
 
+template<class SizeT>
+void presentOutputFromConverterWithPresenter(const Converter<SizeT>& converter, const Presenter<SizeT>& presenter) {
+    std::for_each(converter.getConvertedHosts().begin(),
+                  converter.getConvertedHosts().end(),
+                  [&](const Host<SizeT>& host) {
+        presenter.sendAsTextToStream(host, std::cout);
+    })
+
+    presenter.sendAsTextToStream(converter.getConvertedSubnets(), std::cout);
+    presenter.sendAsTextToStream(converter.getConvertedRanges(), std::cout);
+}
+
 
 template<class SizeT>
 void convert(const Configuration& configuration, Logger& logger) {
     auto converter = getConverter<SizeT>(configuration);
     auto presenter = getPresenter<SizeT>(configuration);
+    //auto dataProvider = getDataProvider(configuration)
+
+    //converter.addInput()
+    presentOutputFromConverterWithPresenter<SizeT>(converter, presenter);
 }
 
 

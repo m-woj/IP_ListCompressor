@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "../ip_entity/Host.hpp"
-#include "../ip_entity/Range.hpp"
-#include "../ip_entity/Subnet.hpp"
+#include "../common/ip_entity/Host.hpp"
+#include "../common/ip_entity/Range.hpp"
+#include "../common/ip_entity/Subnet.hpp"
 
 #include "ConverterConfig.hpp"
 
@@ -25,15 +25,15 @@ public:
 
     void addInput(std::string& input);
 
-    [[nodiscard]] std::vector<Host<SizeT>>& getConvertedHosts() {
+    [[nodiscard]] const std::vector<Host<SizeT>>& getConvertedHosts() const {
         return hosts;
     }
 
-    [[nodiscard]] std::vector<Range<SizeT>>& getConvertedRanges() {
+    [[nodiscard]] const std::vector<Range<SizeT>>& getConvertedRanges() const {
         return ranges;
     }
 
-    [[nodiscard]] std::vector<Subnet<SizeT>>& getConvertedSubnets() {
+    [[nodiscard]] const std::vector<Subnet<SizeT>>& getConvertedSubnets() const {
         return subnets;
     }
 
