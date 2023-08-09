@@ -23,15 +23,15 @@ public:
     }
 
     void sendAsTextToStream(const Host<SizeT>& host, std::ostream& outputStream) const {
-        outputStream << config.hostsPrefix << AddressTransformer<SizeT>::convertToText(host, buffer) << config.suffix;
+        outputStream << config.hostsPrefix << AddressTransformer::convertToText(host, buffer) << config.suffix;
     }
 
     void sendAsTextToStream(const Range<SizeT>& range, std::ostream& outputStream) const {
-        outputStream << config.rangesPrefix << AddressTransformer<SizeT>::convertToText(range, buffer) << config.suffix;
+        outputStream << config.rangesPrefix << AddressTransformer::convertToText(range, buffer) << config.suffix;
     }
 
     void sendAsTextToStream(const Subnet<SizeT>& subnet, std::ostream& outputStream) const {
-        outputStream << config.subnetsPrefix << AddressTransformer<SizeT>::convertToText(subnet, buffer) << config.suffix;
+        outputStream << config.subnetsPrefix << AddressTransformer::convertToText(subnet, buffer) << config.suffix;
     }
 
 protected:

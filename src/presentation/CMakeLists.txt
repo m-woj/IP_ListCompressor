@@ -6,7 +6,11 @@ set(CMAKE_CXX_EXTENSIONS        OFF)
 
 project(${PROJECT_NAME})
 
+add_subdirectory(ip_v4)
+
 add_library(${PROJECT_NAME} STATIC
         PresenterBuilder.cpp
-        ip_v4/AddressTransformerIPv4.cpp
         )
+
+target_link_libraries(${PROJECT_NAME} STATIC
+        presentation_ip_v4)

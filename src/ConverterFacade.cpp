@@ -35,7 +35,7 @@ Presenter<SizeT> getPresenter(const Configuration& configuration) {
 
 
 template<class SizeT, class EntityT>
-void presentOutputWithPresenter(const std::vector<EntityT> output, const Presenter<SizeT>& presenter) {
+void presentOutputWithPresenter(const std::vector<EntityT>& output, const Presenter<SizeT>& presenter) {
     for (const auto& entity : output) {
         presenter.sendAsTextToStream(entity, std::cout);
     }
@@ -49,9 +49,9 @@ void convert(const Configuration& configuration, Logger& logger) {
     //auto dataProvider = getDataProvider(configuration)
 
     //converter.addInput()
-    presentOutputWithPresenter<SizeT>(converter.getConvertedSubnets(), presenter);
-    presentOutputWithPresenter<SizeT>(converter.getConvertedRanges(), presenter);
-    presentOutputWithPresenter<SizeT>(converter.getConvertedHosts(), presenter);
+    presentOutputWithPresenter(converter.getConvertedSubnets(), presenter);
+    presentOutputWithPresenter(converter.getConvertedRanges(), presenter);
+    presentOutputWithPresenter(converter.getConvertedHosts(), presenter);
 }
 
 
