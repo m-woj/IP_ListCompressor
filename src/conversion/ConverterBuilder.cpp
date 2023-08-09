@@ -4,36 +4,48 @@
 #include "ConverterBuilder.hpp"
 
 
-void ConverterBuilder::setMultithreadingRequirement(bool multithreadingRequirement) {
+ConverterBuilder& ConverterBuilder::setMultithreadingRequirement(bool multithreadingRequirement) {
     this->converterConfig.multithreadingRequired = multithreadingRequirement;
+
+    return *this;
 }
 
 
-void ConverterBuilder::setCompressionRequirement(bool compressionRequirement) {
+ConverterBuilder& ConverterBuilder::setCompressionRequirement(bool compressionRequirement) {
     this->converterConfig.compressionRequired = compressionRequirement;
+
+    return *this;
 }
 
 
-void ConverterBuilder::setRangesDecompositionRequirement(bool rangesDecompositionRequirement) {
+ConverterBuilder& ConverterBuilder::setRangesDecompositionRequirement(bool rangesDecompositionRequirement) {
     this->converterConfig.rangesDecompositionRequired = rangesDecompositionRequirement;
+
+    return *this;
 }
 
 
-void ConverterBuilder::setRangesBuildingRequirement(bool rangesBuildingRequired) {
+ConverterBuilder& ConverterBuilder::setRangesBuildingRequirement(bool rangesBuildingRequired) {
     this->converterConfig.rangesBuildingRequired = rangesBuildingRequired;
+
+    return *this;
 }
 
 
-void ConverterBuilder::setPurificationOnlyRequirement(bool purificationOnlyRequired) {
+ConverterBuilder& ConverterBuilder::setPurificationOnlyRequirement(bool purificationOnlyRequired) {
     this->converterConfig.purificationOnlyRequired = purificationOnlyRequired;
+
+    return *this;
 }
 
 
-void ConverterBuilder::setInputRecordsDelimiter(const char* inputRecordsDelimiter) {
+ConverterBuilder& ConverterBuilder::setInputRecordsDelimiter(const char* inputRecordsDelimiter) {
     BuilderUtils::setOrThrowException(inputRecordsDelimiter,
                                       this->converterConfig.inputRecordsDelimiter,
                                       RECORDS_DELIMITER_MAX_LENGTH,
                                       "Input records delimiter is too long.");
+
+    return *this;
 }
 
 

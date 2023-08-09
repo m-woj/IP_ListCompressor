@@ -100,4 +100,6 @@ void setOtherOptions(CLI::App& app, Configuration& configuration) {
     app.add_option("-o,--outputFilePath", configuration.inputDataFileURLs,
                    "Output file path.")
                     ->check(CLI::Validator(CLI::NonexistentPath));
+    app.add_flag("-6, --v6", configuration.ipv6Requirement,
+                 "Set if IP data feed is version 6.");
 }

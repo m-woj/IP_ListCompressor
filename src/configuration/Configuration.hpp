@@ -29,4 +29,5 @@ struct Configuration {
 
     //  Other
     std::string outputFilePath;
+    bool ipv6Requirement;
 };
