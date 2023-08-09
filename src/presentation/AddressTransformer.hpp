@@ -7,39 +7,21 @@
 
 class AddressTransformer {
 public:
-    static const char* convertFromValueToText(uint32_t value, char* textBuffer) {
-        return AddressTransformerIPv4::convertFromValueToText(value, textBuffer);
+    // IPv4
+    static const char* convertToText(const Host<uint32_t>& host, char* textBuffer) {
+        AddressTransformerIPv4::convertFromValueToText(host.getValue(), textBuffer);
+        return textBuffer;
     }
 
-    template<class SizeT>
-    static const char* convertToText(const Host<SizeT>& entity, char* textBuffer);
+    static const char* convertToText(const Subnet<uint32_t>& subnet, char* textBuffer) {
+        AddressTransformerIPv4::convertToText(subnet, textBuffer);
 
-    template<class SizeT>
-    static const char* convertToText(const Subnet<SizeT>& entity, char* textBuffer);
+        return textBuffer;
+    }
 
-    template<class SizeT>
-    static const char* convertToText(const Range<SizeT>& entity, char* textBuffer);
+    static const char* convertToText(const Range<uint32_t>& range, char* textBuffer) {
+        AddressTransformerIPv4::convertToText(range, textBuffer);
+
+        return textBuffer;
+    }
 };
-
-
-// IPv4
-template<>
-const char* AddressTransformer::convertToText<uint32_t>(const Host<uint32_t>& entity, char *textBuffer) {
-    convertFromValueToText(entity.getValue(), textBuffer);
-
-    return textBuffer;
-}
-
-template<>
-const char* AddressTransformer::convertToText<uint32_t>(const Subnet<uint32_t>& entity, char *textBuffer) {
-    AddressTransformerIPv4::convertToText(entity, textBuffer);
-
-    return textBuffer;
-}
-
-template<>
-const char* AddressTransformer::convertToText<uint32_t>(const Range<uint32_t>& entity, char *textBuffer) {
-    AddressTransformerIPv4::convertToText(entity, textBuffer);
-
-    return textBuffer;
-}

@@ -2,9 +2,9 @@
 
 #include "../../consts.hpp"
 
-#include "../../ip_entity/Host.hpp"
-#include "../../ip_entity/Range.hpp"
-#include "../../ip_entity/Subnet.hpp"
+#include "../../common/ip_entity/Host.hpp"
+#include "../../common/ip_entity/Range.hpp"
+#include "../../common/ip_entity/Subnet.hpp"
 
 
 class AddressTransformerIPv4 {

@@ -3,7 +3,6 @@
 #include "ConverterFacade.hpp"
 
 #include "configuration/ConfigurationProvider.hpp"
-#include "common/logging/Logger.hpp"
 #include "presentation/PresenterBuilder.hpp"
 #include "conversion/ConverterBuilder.hpp"
 
@@ -37,21 +36,23 @@ Presenter<SizeT> getPresenter(const Configuration& configuration) {
 template<class SizeT, class EntityT>
 void presentOutputWithPresenter(const std::vector<EntityT>& output, const Presenter<SizeT>& presenter) {
     for (const auto& entity : output) {
-        presenter.sendAsTextToStream(entity, std::cout);
+//        presenter.sendAsTextToStream(entity, std::cout);
     }
+
+    presenter.sendAsTextToStream(Host<uint32_t>::createFromInitialValue(1), std::cout);
 }
 
 
 template<class SizeT>
-void convert(const Configuration& configuration, Logger& logger) {
+void convert(const Configuration& configuration) {
     auto converter = getConverter<SizeT>(configuration);
     auto presenter = getPresenter<SizeT>(configuration);
     //auto dataProvider = getDataProvider(configuration)
 
     //converter.addInput()
     presentOutputWithPresenter(converter.getConvertedSubnets(), presenter);
-    presentOutputWithPresenter(converter.getConvertedRanges(), presenter);
-    presentOutputWithPresenter(converter.getConvertedHosts(), presenter);
+//    presentOutputWithPresenter(converter.getConvertedRanges(), presenter);
+//    presentOutputWithPresenter(converter.getConvertedHosts(), presenter);
 }
 
 
@@ -70,12 +71,10 @@ void ConverterFacade::convertBasingOnInputArguments(int argc, const char **argv)
 
 
 void convert(const Configuration& configuration) {
-    auto logger = Logger();
-
     if (configuration.ipv6Requirement) {
         assert("Not implemented yet.");
     }
     else {
-        convert<uint32_t>(configuration, logger);
+        convert<uint32_t>(configuration);
     }
 }
