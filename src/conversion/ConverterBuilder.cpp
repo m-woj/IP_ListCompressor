@@ -1,5 +1,5 @@
 #include "../consts.hpp"
-#include "../utils/BuilderUtils.hpp"
+#include "../common//utils/BuilderUtils.hpp"
 
 #include "ConverterBuilder.hpp"
 
@@ -46,18 +46,4 @@ ConverterBuilder& ConverterBuilder::setInputRecordsDelimiter(const char* inputRe
                                       "Input records delimiter is too long.");
 
     return *this;
-}
-
-
-Converter<uint32_t> ConverterBuilder::getIPv4Converter() const {
-    assert(!(this->converterConfig.rangesBuildingRequired && this->converterConfig.rangesDecompositionRequired));
-    assert(!(
-            this->converterConfig.purificationOnlyRequired &&
-            (
-                    this->converterConfig.rangesDecompositionRequired ||
-                    this->converterConfig.rangesBuildingRequired ||
-                    this->converterConfig.compressionRequired
-            )));
-
-    return Converter<uint32_t>::createFromConverterConfig(converterConfig);
 }

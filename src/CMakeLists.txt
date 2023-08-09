@@ -9,8 +9,9 @@ project(${PROJECT_NAME})
 add_library(${PROJECT_NAME}
         ConverterFacade.cpp)
 
-add_subdirectory(ip_entity)
-add_subdirectory(logging)
+add_subdirectory(common/ip_entity)
+add_subdirectory(common/logging)
+
 add_subdirectory(conversion)
 add_subdirectory(presentation)
 add_subdirectory(configuration)

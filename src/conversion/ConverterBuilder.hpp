@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+
 #include "ConverterConfig.hpp"
 #include "Converter.hpp"
 
@@ -21,5 +23,22 @@ public:
 
     [[maybe_unused]] ConverterBuilder& setInputRecordsDelimiter(const char* inputRecordsDelimiter);
 
-    [[nodiscard]] Converter<uint32_t> getIPv4Converter() const;
+    template<class SizeT>
+    [[nodiscard]] Converter<SizeT> getConverter() const;
 };
+
+
+// IPv4
+template<>
+Converter<uint32_t> ConverterBuilder::getConverter() const {
+    assert(!(this->converterConfig.rangesBuildingRequired && this->converterConfig.rangesDecompositionRequired));
+    assert(!(
+            this->converterConfig.purificationOnlyRequired &&
+            (
+                    this->converterConfig.rangesDecompositionRequired ||
+                    this->converterConfig.rangesBuildingRequired ||
+                    this->converterConfig.compressionRequired
+            )));
+
+    return Converter<uint32_t>::createFromConverterConfig(converterConfig);
+}

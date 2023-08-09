@@ -15,4 +15,14 @@ public:
     [[maybe_unused]] PresenterBuilder& setRangesPrefix(const char* rangesPrefix);
 
     [[maybe_unused]] PresenterBuilder& setSuffix(const char* suffix);
+
+    template<class SizeT>
+    Presenter<SizeT> getPresenter() const;
 };
+
+
+// IPv4
+template<>
+Presenter<uint32_t> PresenterBuilder::getPresenter() const {
+    return Presenter<uint32_t>::createFromPresenterConfig(PresenterConfig());
+}
