@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "ConverterFacade.hpp"
 
@@ -50,6 +51,11 @@ void convert(const Configuration& configuration) {
     converter.convert();
 
     auto presenter = getPresenter<SizeT>(configuration);
+
+    if (!configuration.outputFilePath.empty()) {
+        std::fstream fs {configuration.outputFilePath};
+    }
+
     presentOutputWithPresenter(converter.getConvertedSubnets(), presenter);
     presentOutputWithPresenter(converter.getConvertedRanges(), presenter);
     presentOutputWithPresenter(converter.getConvertedHosts(), presenter);

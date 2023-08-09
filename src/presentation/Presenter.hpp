@@ -15,6 +15,7 @@
 template<class SizeT>
 class Presenter {
     const PresenterConfig config;
+    std::ostream* outputStream {&std::cout};
     char textBuffer[IP_TEXT_SIZE] = "";
 
 public:
@@ -22,18 +23,22 @@ public:
         return Presenter<SizeT>(config);
     }
 
+    void setOutputStream(std::ostream* newOutputStream) {
+        outputStream = newOutputStream;
+    }
+
     void presentAsText(const Host<SizeT>& host) {
-        config.outputStream << config.hostsPrefix << AddressTransformer::convertToText(host, textBuffer)
+        *outputStream << config.hostsPrefix << AddressTransformer::convertToText(host, textBuffer)
         << config.suffix;
     }
 
     void presentAsText(const Range<SizeT>& range) {
-        config.outputStream << config.rangesPrefix << AddressTransformer::convertToText(range, textBuffer)
+        *outputStream << config.rangesPrefix << AddressTransformer::convertToText(range, textBuffer)
         << config.suffix;
     }
 
     void presentAsText(const Subnet<SizeT>& subnet) {
-        config.outputStream << config.subnetsPrefix << AddressTransformer::convertToText(subnet, textBuffer)
+        *outputStream << config.subnetsPrefix << AddressTransformer::convertToText(subnet, textBuffer)
         << config.suffix;
     }
 
