@@ -25,6 +25,8 @@ public:
 
     void addInput(std::string& input);
 
+    void convert();
+
     [[nodiscard]] const std::vector<Host<SizeT>>& getConvertedHosts() const {
         return hosts;
     }

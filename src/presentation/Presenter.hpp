@@ -22,16 +22,19 @@ public:
         return Presenter<SizeT>(config);
     }
 
-    void sendAsTextToStream(const Host<SizeT>& host, std::ostream& outputStream) {
-        outputStream << config.hostsPrefix << AddressTransformer::convertToText(host, textBuffer) << config.suffix;
+    void presentAsText(const Host<SizeT>& host) {
+        config.outputStream << config.hostsPrefix << AddressTransformer::convertToText(host, textBuffer)
+        << config.suffix;
     }
 
-    void sendAsTextToStream(const Range<SizeT>& range, std::ostream& outputStream) {
-        outputStream << config.rangesPrefix << AddressTransformer::convertToText(range, textBuffer) << config.suffix;
+    void presentAsText(const Range<SizeT>& range) {
+        config.outputStream << config.rangesPrefix << AddressTransformer::convertToText(range, textBuffer)
+        << config.suffix;
     }
 
-    void sendAsTextToStream(const Subnet<SizeT>& subnet, std::ostream& outputStream) {
-        outputStream << config.subnetsPrefix << AddressTransformer::convertToText(subnet, textBuffer) << config.suffix;
+    void presentAsText(const Subnet<SizeT>& subnet) {
+        config.outputStream << config.subnetsPrefix << AddressTransformer::convertToText(subnet, textBuffer)
+        << config.suffix;
     }
 
 protected:
