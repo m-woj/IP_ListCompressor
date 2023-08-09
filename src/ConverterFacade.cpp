@@ -21,6 +21,7 @@ Converter<SizeT> getConverter(const Configuration& configuration) {
             .getConverter<SizeT>();
 }
 
+
 template<class SizeT>
 Presenter<SizeT> getPresenter(const Configuration& configuration) {
     return PresenterBuilder()
@@ -32,16 +33,12 @@ Presenter<SizeT> getPresenter(const Configuration& configuration) {
             .getPresenter<SizeT>();
 }
 
-template<class SizeT>
-void presentOutputFromConverterWithPresenter(const Converter<SizeT>& converter, const Presenter<SizeT>& presenter) {
-    std::for_each(converter.getConvertedHosts().begin(),
-                  converter.getConvertedHosts().end(),
-                  [&](const Host<SizeT>& host) {
-        presenter.sendAsTextToStream(host, std::cout);
-    })
 
-    presenter.sendAsTextToStream(converter.getConvertedSubnets(), std::cout);
-    presenter.sendAsTextToStream(converter.getConvertedRanges(), std::cout);
+template<class SizeT, class EntityT>
+void presentOutputWithPresenter(const std::vector<EntityT> output, const Presenter<SizeT>& presenter) {
+    for (const auto& entity : output) {
+        presenter.sendAsTextToStream(entity, std::cout);
+    }
 }
 
 
@@ -52,7 +49,9 @@ void convert(const Configuration& configuration, Logger& logger) {
     //auto dataProvider = getDataProvider(configuration)
 
     //converter.addInput()
-    presentOutputFromConverterWithPresenter<SizeT>(converter, presenter);
+    presentOutputWithPresenter<SizeT>(converter.getConvertedSubnets(), presenter);
+    presentOutputWithPresenter<SizeT>(converter.getConvertedRanges(), presenter);
+    presentOutputWithPresenter<SizeT>(converter.getConvertedHosts(), presenter);
 }
 
 
