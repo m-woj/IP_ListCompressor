@@ -37,10 +37,8 @@ ConfigurationProvider::ConfigurationProvider(int argc, const char* argv[]) {
 }
 
 
-std::optional<std::reference_wrapper<const Configuration>> ConfigurationProvider::tryGetConfiguration() const {
-    return isValid
-        ? std::optional<std::reference_wrapper<const Configuration>>{configuration}
-        : std::nullopt;
+std::optional<const Configuration*> ConfigurationProvider::tryGetConfiguration() const {
+    return isValid ? std::make_optional<const Configuration*>(&configuration) : std::nullopt;
 }
 
 

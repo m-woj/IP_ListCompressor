@@ -13,10 +13,12 @@ add_subdirectory(ip_entity)
 add_subdirectory(logging)
 add_subdirectory(conversion)
 add_subdirectory(presentation)
+add_subdirectory(configuration)
 
 target_link_libraries(${PROJECT_NAME}
         ip_entity
         logging
         conversion
         presentation
+        configuration
 )

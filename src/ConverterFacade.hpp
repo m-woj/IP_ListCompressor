@@ -1,18 +1,11 @@
-#include "configuration/ConfigurationProvider.hpp"
-#include "logging/Logger.hpp"
-#include "presentation/PresenterBuilder.hpp"
-#include "conversion/ConverterBuilder.hpp"
+#include "configuration/Configuration.hpp"
 
 
 class ConverterFacade {
-    const ConfigurationProvider configurationProvider;
-
 public:
-    static ConverterFacade createFromInputArguments(int argc, const char* argv[]);
+    ConverterFacade() = delete;
 
-    void convert() const;
+    static void convertBasingOnInputArguments(int argc, const char* argv[]);
 
-private:
-    ConverterFacade(int argc, const char* argv[]):
-        configurationProvider(ConfigurationProvider::createFromInputArguments(argc, argv)) {};
+    static void convertBasingOnConfiguration(const Configuration& configuration);
 };
