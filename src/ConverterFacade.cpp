@@ -64,7 +64,7 @@ void sendDataFromDataProviderToConverter(const InputDataProvider& dataProvider, 
     if (dataProvider.hasAnyData()) {
         const auto& sourceFiles = dataProvider.getSourceFiles();
         std::for_each(sourceFiles.begin(), sourceFiles.end(),
-                      [&converter](const std::basic_istream<char>& sourceFile){
+                      [&converter](const std::basic_istream<char>& sourceFile) {
                           converter.addDataFromStream(sourceFile);
                       });
     }
@@ -75,11 +75,10 @@ void sendDataFromDataProviderToConverter(const InputDataProvider& dataProvider, 
 
 
 template<class SizeT>
-void convert(const Configuration& configuration) {
-    auto logger = std::make_shared<Logger>();
-
+void convert(const Configuration& configuration, const std::shared_ptr<Logger>& logger) {
     auto dataProvider = InputDataProvider();
     dataProvider.setLogger(logger);
+    dataProvider.addSourceFiles(configuration.inputDataFileURLs);
 
     auto converter = getConverter<SizeT>(configuration);
     converter.setLogger(logger);
@@ -107,10 +106,12 @@ void ConverterFacade::convertBasingOnInputArguments(int argc, const char **argv)
 
 
 void convert(const Configuration& configuration) {
+    auto logger = std::make_shared<Logger>();
+
     if (configuration.ipv6Requirement) {
         assert("Not implemented yet.");
     }
     else {
-        convert<uint32_t>(configuration);
+        convert<uint32_t>(configuration, logger);
     }
 }

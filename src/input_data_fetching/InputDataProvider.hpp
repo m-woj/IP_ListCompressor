@@ -21,7 +21,7 @@ public:
 
     void addSourceFiles(const std::vector<std::string>& paths);
 
-    bool hasAnyData() const;
+    [[nodiscard]] bool hasAnyData() const;
 
-    const std::vector<std::ifstream>& getSourceFiles() const;
+    [[nodiscard]] const std::vector<std::ifstream>& getSourceFiles() const;
 };

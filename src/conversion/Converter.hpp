@@ -11,6 +11,9 @@
 
 #include "../common/logging/Logger.hpp"
 
+#include "fetching/DataFetcher.hpp"
+#include "fetching/DataFetcherConfig.hpp"
+
 #include "ConverterConfig.hpp"
 
 
@@ -53,5 +56,8 @@ public:
     }
 
 protected:
-    explicit Converter(ConverterConfig converterConfig) : config(converterConfig) {};
+    explicit Converter(ConverterConfig converterConfig) : config(converterConfig) {
+        auto dataFetcherConfig = DataFetcherConfig<SizeT> {hosts, ranges, subnets, config.inputRecordsDelimiter}
+
+    };
 };
