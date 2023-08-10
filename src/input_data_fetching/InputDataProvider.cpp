@@ -19,11 +19,11 @@ void InputDataProvider::addSourceFiles(const std::vector<std::string> &paths) {
 }
 
 
-bool InputDataProvider::hasAnyData() {
+bool InputDataProvider::hasAnyData() const {
     return !sourceFiles.empty();
 }
 
 
-const std::vector<std::ifstream>& InputDataProvider::getSourceFiles() {
+const std::vector<std::ifstream>& InputDataProvider::getSourceFiles() const {
     return sourceFiles;
 }
