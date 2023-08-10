@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <istream>
 
 #include "../common/ip_entity/Host.hpp"
 #include "../common/ip_entity/Range.hpp"
@@ -31,7 +32,9 @@ public:
         logger = newLogger;
     }
 
-    void addDataFromStream(std::istream* inputStream);
+    void addDataFromStream(const std::basic_istream<char>& inputStream) {
+
+    }
 
     void convert() {
 

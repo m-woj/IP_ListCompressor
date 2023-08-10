@@ -71,12 +71,13 @@ void convert(const Configuration& configuration) {
 
     if (dataProvider.hasAnyData()) {
         const auto& sourceFiles = dataProvider.getSourceFiles();
-        std::for_each(sourceFiles.begin(), sourceFiles.end(), [&converter](auto* sourceFile){
+        std::for_each(sourceFiles.begin(), sourceFiles.end(),
+                      [&converter](const std::basic_istream<char>& sourceFile){
             converter.addDataFromStream(sourceFile);
         });
     }
     else {
-        converter.addDataFromStream(&std::cin);
+        converter.addDataFromStream(std::cin);
     }
 
     converter.convert();
