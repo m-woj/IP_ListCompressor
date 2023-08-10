@@ -1,13 +1,30 @@
 #include "Logger.hpp"
 
-#include <iostream>
 
+void Logger::logInfo(const std::string &info) const {
+    *infoStream << info << "\n";
+}
 
-void Logger::logInfo(const char *info) {
-    std::cout << info << '\n';
+void Logger::logWarning(const std::string &warning) const {
+    *warningStream << warning << "\n";
 }
 
 
-void Logger::logError(const char *error) {
-    std::cerr << error << '\n';
+void Logger::logError(const std::string &error) const {
+    *errorStream << error << "\n";
+}
+
+
+void Logger::setInfoStream(std::ostream *newStream) {
+    infoStream = newStream;
+}
+
+
+void Logger::setWarningStream(std::ostream *newStream) {
+    warningStream = newStream;
+}
+
+
+void Logger::setErrorStream(std::ostream *newStream) {
+    errorStream = newStream;
 }

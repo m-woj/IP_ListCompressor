@@ -15,6 +15,7 @@ add_subdirectory(common/logging)
 add_subdirectory(conversion)
 add_subdirectory(presentation)
 add_subdirectory(configuration)
+add_subdirectory(input_data_fetching)
 
 target_link_libraries(${PROJECT_NAME}
         ip_entity
@@ -22,4 +23,5 @@ target_link_libraries(${PROJECT_NAME}
         conversion
         presentation
         configuration
+        input_data_fetching
 )

@@ -2,10 +2,13 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "../common/ip_entity/Host.hpp"
 #include "../common/ip_entity/Range.hpp"
 #include "../common/ip_entity/Subnet.hpp"
+
+#include "../common/logging/Logger.hpp"
 
 #include "ConverterConfig.hpp"
 
@@ -13,6 +16,7 @@
 template<class SizeT>
 class Converter {
     const ConverterConfig config;
+    std::shared_ptr<Logger> logger = std::make_unique<Logger>();
 
     std::vector<Host<SizeT>> hosts{};
     std::vector<Range<SizeT>> ranges{};
@@ -23,7 +27,11 @@ public:
         return Converter<SizeT>(converterConfig);
     };
 
-    void addInput(std::string& input);
+    void setLogger(const std::shared_ptr<Logger>& newLogger) {
+        logger = newLogger;
+    }
+
+    void addData(std::iostream& inputStream);
 
     void convert();
 

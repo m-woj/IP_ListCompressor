@@ -32,7 +32,7 @@ ConfigurationProvider::ConfigurationProvider(int argc, const char* argv[]) {
         app.parse(argc, argv);
     } catch (const CLI::ParseError& e) {
         isValid = false;
-        std::cerr << e.what();
+        logger->logError(e.what());
     }
 }
 

@@ -47,13 +47,14 @@ void convert(const Configuration& configuration) {
     //auto dataProvider = getDataProvider(configuration)
 
     auto converter = getConverter<SizeT>(configuration);
-    //converter.addInput()
+    //converter.addData()
     converter.convert();
 
     auto presenter = getPresenter<SizeT>(configuration);
 
-    if (!configuration.outputFilePath.empty()) {
-        std::fstream fs {configuration.outputFilePath};
+    std::ofstream outputFile {configuration.outputFilePath};
+    if (outputFile.is_open()) {
+        presenter.setOutputStream(&outputFile);
     }
 
     presentOutputWithPresenter(converter.getConvertedSubnets(), presenter);
