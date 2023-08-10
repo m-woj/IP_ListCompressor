@@ -30,7 +30,8 @@ ConfigurationProvider::ConfigurationProvider(int argc, const char* argv[]) {
 
     try {
         app.parse(argc, argv);
-    } catch (const CLI::ParseError& e) {
+    }
+    catch (const CLI::ParseError& e) {
         isValid = false;
         logger->logError(e.what());
     }
@@ -101,5 +102,5 @@ void setOtherOptions(CLI::App& app, Configuration& configuration) {
                    "Output file path.")
                     ->check(CLI::Validator(CLI::NonexistentPath));
     app.add_flag("-6, --v6", configuration.ipv6Requirement,
-                 "Set if IP data feed is version 6.");
+                 "Set if IP of data feed is version 6.");
 }

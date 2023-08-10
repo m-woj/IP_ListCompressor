@@ -1,11 +1,13 @@
-#include <iostream>
 #include <fstream>
+#include <memory>
 
-#include "ConverterFacade.hpp"
-
+#include "common/logging/Logger.hpp"
+#include "input_data_fetching/InputDataProvider.hpp"
 #include "configuration/ConfigurationProvider.hpp"
 #include "presentation/PresenterBuilder.hpp"
 #include "conversion/ConverterBuilder.hpp"
+
+#include "ConverterFacade.hpp"
 
 
 template<class SizeT>
@@ -43,13 +45,7 @@ void presentOutputWithPresenter(const std::vector<EntityT>& output, Presenter<Si
 
 
 template<class SizeT>
-void convert(const Configuration& configuration) {
-    //auto dataProvider = getDataProvider(configuration)
-
-    auto converter = getConverter<SizeT>(configuration);
-    //converter.addData()
-    converter.convert();
-
+void presentOutputFromConverter(const Converter<SizeT>& converter, const Configuration& configuration) {
     auto presenter = getPresenter<SizeT>(configuration);
 
     std::ofstream outputFile {configuration.outputFilePath};
@@ -60,6 +56,32 @@ void convert(const Configuration& configuration) {
     presentOutputWithPresenter(converter.getConvertedSubnets(), presenter);
     presentOutputWithPresenter(converter.getConvertedRanges(), presenter);
     presentOutputWithPresenter(converter.getConvertedHosts(), presenter);
+}
+
+
+template<class SizeT>
+void convert(const Configuration& configuration) {
+    auto logger = std::make_shared<Logger>();
+
+    auto dataProvider = InputDataProvider();
+    dataProvider.setLogger(logger);
+
+    auto converter = getConverter<SizeT>(configuration);
+    converter.setLogger(logger);
+
+    if (dataProvider.hasAnyData()) {
+        const auto& sourceFiles = dataProvider.getSourceFiles();
+        std::for_each(sourceFiles.begin(), sourceFiles.end(), [&converter](auto* sourceFile){
+            converter.addDataFromStream(sourceFile);
+        });
+    }
+    else {
+        converter.addDataFromStream(&std::cin);
+    }
+
+    converter.convert();
+
+    presentOutputFromConverter(converter, configuration);
 }
 
 

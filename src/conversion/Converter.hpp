@@ -31,9 +31,11 @@ public:
         logger = newLogger;
     }
 
-    void addData(std::iostream& inputStream);
+    void addDataFromStream(std::istream* inputStream);
 
-    void convert();
+    void convert() {
+
+    }
 
     [[nodiscard]] const std::vector<Host<SizeT>>& getConvertedHosts() const {
         return hosts;
