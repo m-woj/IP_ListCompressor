@@ -34,6 +34,7 @@ public:
 
     void setLogger(const std::shared_ptr<Logger>& newLogger) {
         logger = newLogger;
+        dataFetcher.setLogger(newLogger);
     }
 
     void addDataFromStream(std::basic_istream<char>& inputStream) {
@@ -60,6 +61,6 @@ protected:
     explicit Converter(ConverterConfig converterConfig) :
         config(converterConfig),
         dataFetcher(DataFetcher<SizeT>::createFromDataFetcherConfig(
-                DataFetcherConfig<SizeT> {hosts, ranges, subnets, config.inputRecordsDelimiter}
+                DataFetcherConfig<SizeT> {hosts, ranges, subnets, config.inputRecordsDelimiter, *logger}
                 )) {};
 };

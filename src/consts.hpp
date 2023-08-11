@@ -11,6 +11,8 @@
 #define DEFAULT_SUFFIX "\n"
 #define DEFAULT_PREFIX ""
 
+#define IPV4_MIN_LENGTH 7
+
 #define IPV4_MAX_LENGTH 15
 #define IPV6_MAX_LENGTH 39
 

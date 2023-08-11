@@ -8,6 +8,8 @@
 #include "../../common/ip_entity/Range.hpp"
 #include "../../common/ip_entity/Subnet.hpp"
 
+#include "../../common/logging/Logger.hpp"
+
 
 template<class SizeT>
 struct DataFetcherConfig {
@@ -15,5 +17,7 @@ struct DataFetcherConfig {
     std::vector<Range<SizeT>>* ranges;
     std::vector<Subnet<SizeT>>* subnets;
 
-    char* recordsDelimiter;
+    char recordsDelimiter {'\n'};
+
+    Logger& logger;
 };

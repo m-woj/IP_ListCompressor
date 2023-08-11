@@ -1,4 +1,5 @@
 #include <optional>
+#include <cstdlib>
 #include <iostream>
 #include <arpa/inet.h>
 
@@ -12,14 +13,125 @@
 #include "DataFetcherIPv4.hpp"
 
 
+void tryFetchEntity(std::basic_string<char>& text, const DataFetcherConfig<uint32_t>& config);
+
+bool doesLookLikeSubnet(const std::basic_string<char>& textBuffer);
+void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t>& config);
+
+bool doesLookLikeRange(const std::basic_string<char>& textBuffer);
+void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t> &config);
+
+void tryFetchHost(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t>& config);
+
+std::optional<uint32_t> tryConvertHostStringToValue(const char* hostString);
+
+
 void DataFetcherIPv4::fetch(const DataFetcherConfig<uint32_t>& config, std::basic_istream<char> &inputStream) {
     std::basic_string<char> textBuffer;
     textBuffer.reserve(IP_TEXT_SIZE);
 
-    while(getline(inputStream, textBuffer, *config.recordsDelimiter));
+    while(getline(inputStream, textBuffer, config.recordsDelimiter)) {
+        tryFetchEntity(textBuffer, config);
+    }
 }
 
 
-std::optional<Host<uint32_t>> tryFetchHost(const char* text) {
+void tryFetchEntity(const char* text, const DataFetcherConfig<uint32_t>& config) {
+    if (doesLookLikeSubnet(text)) {
+        tryFetchSubnet(text, config);
+    }
+    else if (doesLookLikeRange(text)) {
+        tryFetchRange(text, config);
+    }
+    else {
+        tryFetchHost(text, config);
+    }
+}
 
+
+bool doesLookLikeSubnet(const std::basic_string<char>& textBuffer) {
+    auto end = textBuffer.end() - 1;
+
+    if (*end == SUBNET_AND_MASK_DELIMITER) {
+        return true;
+    }
+
+    if (*--end == SUBNET_AND_MASK_DELIMITER) {
+        return true;
+    }
+
+    return false;
+}
+
+
+void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t> config) {
+    auto delimiterPos = textBuffer.find(SUBNET_AND_MASK_DELIMITER);
+    ushort maskLength;
+
+    auto hostValue = tryConvertHostStringToValue(
+            textBuffer.substr(0, delimiterPos).c_str());
+
+    maskLength = std::strtol(textBuffer.c_str() + delimiterPos, textBuffer.end(), 10);
+}
+
+
+bool doesLookLikeRange(const std::basic_string<char>& textBuffer) {
+    auto begin = textBuffer.begin() + IPV4_MIN_LENGTH + 1;
+    auto end = textBuffer.end() - IPV4_MIN_LENGTH;
+    while (begin != end) {
+        if (*begin++ == RANGE_DELIMITER_SIGN) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t> config) {
+    auto delimiterPos = textBuffer.find(RANGE_DELIMITER_SIGN);
+
+    auto firstHostValue = tryConvertHostStringToValue(
+            textBuffer.substr(0, delimiterPos).c_str());
+
+    if (!firstHostValue.has_value()) {
+        config.logger.logInfo("Invalid first host of a range: " + textBuffer);
+        return;
+    }
+
+    auto lastHostValue = tryConvertHostStringToValue(
+            textBuffer.c_str() + delimiterPos);
+
+    if (!lastHostValue.has_value()) {
+        config.logger.logInfo("Invalid last host of a range: " + textBuffer);
+        return;
+    }
+
+    config.ranges->emplace_back(Range<uint32_t>::createFromFirstAndLastHost(
+            Host<uint32_t>::createFromInitialValue(firstHostValue.value()),
+            Host<uint32_t>::createFromInitialValue(lastHostValue.value())
+            ));
+}
+
+
+void tryFetchHost(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t> config) {
+    auto hostValue = tryConvertHostStringToValue(textBuffer.c_str());
+    if (hostValue.has_value()) {
+        config.hosts->emplace_back(Host<uint32_t>::createFromInitialValue(hostValue.value()));
+    }
+    else {
+        config.logger.logInfo("Invalid host: " + textBuffer);
+    }
+}
+
+
+std::optional<uint32_t> tryConvertHostStringToValue(const char* hostString) {
+    struct sockaddr_in sockAddr {};
+
+    if (inet_pton(AF_INET, hostString, &(sockAddr.sin_addr)) == 1) {
+        return ntohl(sockAddr.sin_addr.s_addr);
+    }
+    else {
+        return {};
+    }
 }
