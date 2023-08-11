@@ -36,15 +36,15 @@ void DataFetcherIPv4::fetch(const DataFetcherConfig<uint32_t>& config, std::basi
 }
 
 
-void tryFetchEntity(std::basic_string<char>& text, const DataFetcherConfig<uint32_t>& config) {
-    if (doesLookLikeSubnet(text)) {
-        tryFetchSubnet(text, config);
+void tryFetchEntity(std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t>& config) {
+    if (doesLookLikeSubnet(textBuffer)) {
+        tryFetchSubnet(textBuffer, config);
     }
-    else if (doesLookLikeRange(text)) {
-        tryFetchRange(text, config);
+    else if (doesLookLikeRange(textBuffer)) {
+        tryFetchRange(textBuffer, config);
     }
     else {
-        tryFetchHost(text, config);
+        tryFetchHost(textBuffer, config);
     }
 }
 
@@ -78,7 +78,7 @@ void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcher
     //Returns 0 if it fails to convert. /0 subnet is also considered wrong
     maskLength = std::strtol(textBuffer.c_str() + delimiterPos, nullptr, 10);
 
-    if (maskLength == 0) {
+    if (maskLength < 1 || maskLength > 32) {
         config.logger.logInfo("Invalid mask length: " + textBuffer);
     }
 
@@ -90,7 +90,11 @@ void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcher
 
 
 bool doesLookLikeRange(const std::basic_string<char>& textBuffer) {
-    auto begin = textBuffer.begin() + IPV4_MIN_LENGTH + 1;
+    if (textBuffer.size() < IPV4_RANGE_MIN_LENGTH) {
+        return false;
+    }
+
+    auto begin = textBuffer.begin() + IPV4_MIN_LENGTH;
     auto end = textBuffer.end() - IPV4_MIN_LENGTH;
     while (begin != end) {
         if (*begin++ == RANGE_DELIMITER_SIGN) {
