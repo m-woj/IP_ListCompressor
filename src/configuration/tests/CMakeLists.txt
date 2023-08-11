@@ -14,12 +14,13 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+add_subdirectory(../../common common)
 add_subdirectory(../../configuration configuration_build)
 
 add_executable(${PROJECT_NAME}
         TestConfigurationProvider.cpp)
 
-target_link_libraries(${PROJECT_NAME} GTest::gtest_main configuration)
+target_link_libraries(${PROJECT_NAME} GTest::gtest_main configuration logging)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

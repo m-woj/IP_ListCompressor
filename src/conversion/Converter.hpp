@@ -21,6 +21,7 @@ template<class SizeT>
 class Converter {
     const ConverterConfig config;
     std::shared_ptr<Logger> logger = std::make_unique<Logger>();
+    DataFetcher<SizeT> dataFetcher;
 
     std::vector<Host<SizeT>> hosts{};
     std::vector<Range<SizeT>> ranges{};
@@ -35,8 +36,8 @@ public:
         logger = newLogger;
     }
 
-    void addDataFromStream(const std::basic_istream<char>& inputStream) {
-
+    void addDataFromStream(std::basic_istream<char>& inputStream) {
+        dataFetcher.fetch(inputStream);
     }
 
     void convert() {
@@ -56,8 +57,9 @@ public:
     }
 
 protected:
-    explicit Converter(ConverterConfig converterConfig) : config(converterConfig) {
-        auto dataFetcherConfig = DataFetcherConfig<SizeT> {hosts, ranges, subnets, config.inputRecordsDelimiter}
-
-    };
+    explicit Converter(ConverterConfig converterConfig) :
+        config(converterConfig),
+        dataFetcher(DataFetcher<SizeT>::createFromDataFetcherConfig(
+                DataFetcherConfig<SizeT> {hosts, ranges, subnets, config.inputRecordsDelimiter}
+                )) {};
 };

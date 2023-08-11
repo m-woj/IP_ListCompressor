@@ -1,67 +1,85 @@
+#include <sstream>
+
 #include <gtest/gtest.h>
 
 #include "../ConfigurationProvider.hpp"
 
+
 #define APP_NAME "IP_List_Converter"
 
 
+auto getConfig = [](auto argc, auto argv){
+    auto configProvider = ConfigurationProvider();
+    auto config = configProvider.tryGetConfiguration(argc, argv);
+
+    return config.value();
+};
+
+
 auto testValidConfig = [](auto argc, auto argv){
-    auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
-    auto config = configProvider.tryGetConfiguration();
+    auto configProvider = ConfigurationProvider();
+    auto config = configProvider.tryGetConfiguration(argc, argv);
+
     ASSERT_TRUE(config.has_value());
 };
 
 auto testInvalidConfig = [](auto argc, auto argv){
-    auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
-    auto config = configProvider.tryGetConfiguration();
+    auto logger = std::make_shared<Logger>();
+    auto errors = std::stringstream();
+    logger->setErrorStream(&errors);
+
+    auto configProvider = ConfigurationProvider();
+    configProvider.setLogger(logger);
+
+    auto config = configProvider.tryGetConfiguration(argc, argv);
+
     ASSERT_FALSE(config.has_value());
+    ASSERT_FALSE(errors.rdbuf()->str().empty());
 };
 
 
-TEST(ConfigurationProvider, invalidArgumentConfig) {
+TEST(ConfigurationProviderTest, invalidArgumentConfig) {
     constexpr int argc = 2;
     const char* argv[argc] = {APP_NAME, "egg"};
     testInvalidConfig(argc, argv);
 }
 
-TEST(ConfigurationProvider, invalidInputConfig) {
+TEST(ConfigurationProviderTest, invalidInputConfig) {
     constexpr int argc = 2;
     const char* argv[argc] = {APP_NAME, "-i"};
     testInvalidConfig(argc, argv);
 }
 
-TEST(ConfigurationProvider, emptyValidConfig) {
+TEST(ConfigurationProviderTest, emptyValidConfig) {
     constexpr int argc = 1;
     const char* argv[argc] = {APP_NAME};
     testValidConfig(argc, argv);
 }
 
-TEST(ConfigurationProvider, mulithreadingValidConfig) {
+TEST(ConfigurationProviderTest, mulithreadingValidConfig) {
     constexpr int argc = 2;
     const char* argv[argc] = {APP_NAME, "-m"};
     testValidConfig(argc, argv);
 }
 
-TEST(ConfigurationProvider, inputDataFilesValidConfig) {
+TEST(ConfigurationProviderTest, inputDataFilesValidConfig) {
     auto path = "/egg/home";
     constexpr int argc = 3;
     const char* argv[argc] = {APP_NAME, "-i", path};
 
-    auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
-    auto config = configProvider.tryGetConfiguration();
+    auto config = getConfig(argc, argv);
 
-    ASSERT_STREQ(config->get().inputDataFileURLs.front().c_str(), path);
+    ASSERT_STREQ(config.inputDataFileURLs.front().c_str(), path);
 }
 
-TEST(ConfigurationProvider, manyInputDataFilesValidConfig) {
+TEST(ConfigurationProviderTest, manyInputDataFilesValidConfig) {
     const char* paths[2] = {"/egg/home", "/egg/source"};
     constexpr int argc = 4;
     const char* argv[argc] = {APP_NAME, "-i", paths[0], paths[1]};
 
-    auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
-    auto config = configProvider.tryGetConfiguration();
+    auto config = getConfig(argc, argv);
 
-    auto parsedPaths = config->get().inputDataFileURLs;
+    auto parsedPaths = config.inputDataFileURLs;
 
     ASSERT_STREQ(parsedPaths.front().c_str(), paths[0]);
     ASSERT_STREQ((std::next(parsedPaths.begin())->c_str()), paths[1]);
@@ -86,8 +104,31 @@ TEST(ConfigurationProvider, specialCharacterSuffix) {
     constexpr int argc = 3;
     const char* argv[argc] = {APP_NAME, "--suffix", suffix};
 
-    auto configProvider = ConfigurationProvider::createFromInputArguments(argc, argv);
-    auto config = configProvider.tryGetConfiguration();
+    auto config = getConfig(argc, argv);
 
-    ASSERT_STREQ("\n \t,", config->get().suffix.c_str());
+    ASSERT_STREQ("\n \t,", config.suffix.c_str());
+}
+
+
+TEST(ConfigurationProvider, validDelimiter) {
+    const char* delimiter = ",";
+    constexpr int argc = 3;
+    const char* argv[argc] = {APP_NAME, "-d", delimiter};
+    testValidConfig(argc, argv);
+}
+
+
+TEST(ConfigurationProvider, validSpecialCharacterDelimiter) {
+    const char* delimiter = R"(\n)";
+    constexpr int argc = 3;
+    const char* argv[argc] = {APP_NAME, "-d", delimiter};
+    testValidConfig(argc, argv);
+}
+
+
+TEST(ConfigurationProvider, invalidDelimiter) {
+    const char* delimiter = ",,";
+    constexpr int argc = 3;
+    const char* argv[argc] = {APP_NAME, "-d", delimiter};
+    testInvalidConfig(argc, argv);
 }

@@ -4,9 +4,9 @@
 
 #include "../../consts.hpp"
 
-#include "../common/ip_entity/Host.hpp"
-#include "../common/ip_entity/Range.hpp"
-#include "../common/ip_entity/Subnet.hpp"
+#include "../../common/ip_entity/Host.hpp"
+#include "../../common/ip_entity/Range.hpp"
+#include "../../common/ip_entity/Subnet.hpp"
 
 
 template<class SizeT>
@@ -15,5 +15,5 @@ struct DataFetcherConfig {
     std::vector<Range<SizeT>>* ranges;
     std::vector<Subnet<SizeT>>* subnets;
 
-    const char* recordsDelimiter;
+    char* recordsDelimiter;
 };

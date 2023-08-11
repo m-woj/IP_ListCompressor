@@ -31,17 +31,3 @@ struct SuffixMaxLengthValidator : public CLI::Validator {
         };
     }
 };
-
-
-struct RecordsDelimiterMaxLengthValidator : public CLI::Validator {
-    RecordsDelimiterMaxLengthValidator() {
-        name_ = "RecordsDelimiterMaxLengthValidator";
-        func_ = [](const std::string &str) {
-            if(str.length() > RECORDS_DELIMITER_MAX_LENGTH)
-                return std::string("Records delimiter length is too long. Max size is ")
-                       + std::to_string(RECORDS_DELIMITER_MAX_LENGTH);
-            else
-                return std::string();
-        };
-    }
-};

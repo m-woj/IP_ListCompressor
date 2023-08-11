@@ -1,6 +1,9 @@
 #include "Logger.hpp"
 
 
+std::ostream nullStream(nullptr);
+
+
 void Logger::logInfo(const std::string &info) const {
     *infoStream << info << "\n";
 }

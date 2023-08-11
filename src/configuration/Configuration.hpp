@@ -18,7 +18,7 @@ struct Configuration {
     bool rangesBuildingRequired;
     bool purificationOnlyRequired;
 
-    std::string inputRecordsDelimiter;
+    char inputRecordsDelimiter;
 
     //  Presenter
     std::string hostsPrefix;

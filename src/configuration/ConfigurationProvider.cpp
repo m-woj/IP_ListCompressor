@@ -9,7 +9,6 @@
 
 const static PrefixMaxLengthValidator prefixMaxLengthValidator;
 const static SuffixMaxLengthValidator suffixMaxLengthValidator;
-const static RecordsDelimiterMaxLengthValidator recordsDelimiterMaxLengthValidator;
 
 
 void setOptions(CLI::App& app, Configuration& configuration);
@@ -19,12 +18,8 @@ void setPresenterOptions(CLI::App& app, Configuration& configuration);
 void setOtherOptions(CLI::App& app, Configuration& configuration);
 
 
-ConfigurationProvider ConfigurationProvider::createFromInputArguments(int argc, const char* argv[]) {
-    return {argc, argv};
-}
-
-
-ConfigurationProvider::ConfigurationProvider(int argc, const char* argv[]) {
+std::optional<Configuration> ConfigurationProvider::tryGetConfiguration(int argc, const char* argv[]) {
+    Configuration configuration{};
     CLI::App app {APP_DESCRIPTION};
     setOptions(app, configuration);
 
@@ -32,14 +27,11 @@ ConfigurationProvider::ConfigurationProvider(int argc, const char* argv[]) {
         app.parse(argc, argv);
     }
     catch (const CLI::ParseError& e) {
-        isValid = false;
         logger->logError(e.what());
+        return std::nullopt;
     }
-}
 
-
-std::optional<const Configuration*> ConfigurationProvider::tryGetConfiguration() const {
-    return isValid ? std::make_optional<const Configuration*>(&configuration) : std::nullopt;
+    return configuration;
 }
 
 
@@ -71,7 +63,6 @@ void setDataConverterOptions(CLI::App& app, Configuration& configuration) {
 
     app.add_option("-d,--inputRecordsDelimiter", configuration.inputRecordsDelimiter,
                    "Set input records delimiter.")
-            ->check(recordsDelimiterMaxLengthValidator)
             ->transform(rawSpecialCharactersToWorkingSpecialCharacters);
 }
 
