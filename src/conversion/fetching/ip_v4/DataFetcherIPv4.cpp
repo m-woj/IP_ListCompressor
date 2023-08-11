@@ -16,12 +16,12 @@
 void tryFetchEntity(std::basic_string<char>& text, const DataFetcherConfig<uint32_t>& config);
 
 bool doesLookLikeSubnet(const std::basic_string<char>& textBuffer);
-void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t>& config);
+void tryFetchSubnet(const std::basic_string<char>& textBuffer, DataFetcherConfig<uint32_t> config);
 
 bool doesLookLikeRange(const std::basic_string<char>& textBuffer);
-void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t> &config);
+void tryFetchRange(const std::basic_string<char>& textBuffer, DataFetcherConfig<uint32_t> config);
 
-void tryFetchHost(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t>& config);
+void tryFetchHost(const std::basic_string<char>& textBuffer, DataFetcherConfig<uint32_t> config);
 
 std::optional<uint32_t> tryConvertHostStringToValue(const char* hostString);
 
@@ -36,7 +36,7 @@ void DataFetcherIPv4::fetch(const DataFetcherConfig<uint32_t>& config, std::basi
 }
 
 
-void tryFetchEntity(const char* text, const DataFetcherConfig<uint32_t>& config) {
+void tryFetchEntity(std::basic_string<char>& text, const DataFetcherConfig<uint32_t>& config) {
     if (doesLookLikeSubnet(text)) {
         tryFetchSubnet(text, config);
     }
@@ -71,7 +71,21 @@ void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcher
     auto hostValue = tryConvertHostStringToValue(
             textBuffer.substr(0, delimiterPos).c_str());
 
-    maskLength = std::strtol(textBuffer.c_str() + delimiterPos, textBuffer.end(), 10);
+    if (!hostValue.has_value()) {
+        config.logger.logInfo("Invalid subnet: " + textBuffer);
+    }
+
+    //Returns 0 if it fails to convert. /0 subnet is also considered wrong
+    maskLength = std::strtol(textBuffer.c_str() + delimiterPos, nullptr, 10);
+
+    if (maskLength == 0) {
+        config.logger.logInfo("Invalid mask length: " + textBuffer);
+    }
+
+    config.subnets->emplace_back(Subnet<uint32_t>::createFromInitialValueAndMaskLength(
+            hostValue.value(),
+            maskLength
+            ));
 }
 
 
