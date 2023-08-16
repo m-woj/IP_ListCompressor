@@ -11,6 +11,14 @@
 
 
 template<class SizeT>
+void fetch(std::basic_istream<char>& inputStream, DataFetcherConfig<SizeT> config);
+
+template<> void fetch<uint32_t>(std::basic_istream<char>& inputStream, DataFetcherConfig<uint32_t> config) {
+    DataFetcherIPv4::fetch(config, inputStream);
+}
+
+
+template<class SizeT>
 class DataFetcher {
     DataFetcherConfig<SizeT> config;
     std::shared_ptr<Logger> logger = std::make_shared<Logger>();
@@ -25,7 +33,9 @@ public:
         config.logger = *newLogger;
     }
 
-    void fetch(std::basic_istream<char>& inputStream);
+    void fetch(std::basic_istream<char>& inputStream) {
+        ::fetch(inputStream, config);
+    }
 
 private:
     explicit DataFetcher(DataFetcherConfig<SizeT> config): config(config) {}

@@ -49,7 +49,6 @@ public:
             return;
         }
 
-
     }
 
     [[nodiscard]] const std::vector<Host<SizeT>>& getConvertedHosts() const {
