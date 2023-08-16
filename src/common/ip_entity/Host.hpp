@@ -16,6 +16,11 @@ public:
         return value;
     }
 
+    bool operator== (const Host<SizeT>& other) const {
+        return this->getValue() == other.getValue();
+    }
+
 private:
     explicit Host(SizeT value): value(value) {};
 };
+

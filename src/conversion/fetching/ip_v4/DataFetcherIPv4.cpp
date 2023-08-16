@@ -50,7 +50,7 @@ void tryFetchEntity(std::basic_string<char>& textBuffer, const DataFetcherConfig
 
 
 bool doesLookLikeSubnet(const std::basic_string<char>& textBuffer) {
-    auto end = textBuffer.end() - 1;
+    auto end = textBuffer.end() - 2;
 
     if (*end == SUBNET_AND_MASK_DELIMITER) {
         return true;
@@ -73,13 +73,15 @@ void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcher
 
     if (!hostValue.has_value()) {
         config.logger.logInfo("Invalid subnet: " + textBuffer);
+        return;
     }
 
-    //Returns 0 if it fails to convert. /0 subnet is also considered wrong
-    maskLength = std::strtol(textBuffer.c_str() + delimiterPos, nullptr, 10);
+    //Returns 0 if fail to convert. /0 subnet is also considered wrong
+    maskLength = std::strtol(textBuffer.c_str() + delimiterPos + 1, nullptr, 10);
 
     if (maskLength < 1 || maskLength > 32) {
         config.logger.logInfo("Invalid mask length: " + textBuffer);
+        return;
     }
 
     config.subnets->emplace_back(Subnet<uint32_t>::createFromInitialValueAndMaskLength(
@@ -118,7 +120,7 @@ void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherC
     }
 
     auto lastHostValue = tryConvertHostStringToValue(
-            textBuffer.c_str() + delimiterPos);
+            textBuffer.c_str() + delimiterPos + 1);
 
     if (!lastHostValue.has_value()) {
         config.logger.logInfo("Invalid last host of a range: " + textBuffer);

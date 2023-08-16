@@ -29,6 +29,10 @@ public:
         return range.getLastValue();
     }
 
+    bool operator== (const Subnet<SizeT>& other) const {
+        return (this->getFirstValue() == other.getFirstValue()) && (this->getMaskLength() == other.getMaskLength());
+    }
+
 private:
     Subnet(SizeT firstValue, unsigned char maskLength): maskLength(maskLength) {
         auto&& subnetSize = SubnetTransformer<SizeT>::getSubnetSizeFromMaskLength(maskLength);
