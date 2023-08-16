@@ -17,7 +17,7 @@ class DataFetcher {
 
 public:
     static DataFetcher<SizeT> createFromDataFetcherConfig(DataFetcherConfig<SizeT> config) {
-        return {config};
+        return DataFetcher<SizeT>(config);
     }
 
     void setLogger(const std::shared_ptr<Logger>& newLogger) {
@@ -30,9 +30,3 @@ public:
 private:
     explicit DataFetcher(DataFetcherConfig<SizeT> config): config(config) {}
 };
-
-
-template<>
-void DataFetcher<uint32_t>::fetch(std::basic_istream<char>& inputStream) {
-    DataFetcherIPv4::fetch(config, inputStream);
-}

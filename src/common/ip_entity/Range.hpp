@@ -34,6 +34,10 @@ public:
         return (this->getFirstValue() == other.getFirstValue()) && (this->getLastValue() == other.getLastValue());
     }
 
+    bool operator< (const Range<SizeT>& other) const {
+        return this->getFirstValue() < other.getFirstValue();
+    }
+
 private:
     Range(Host<SizeT> firstHost, Host<SizeT> lastHost): firstHost(firstHost), lastHost(lastHost) {};
 };

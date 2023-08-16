@@ -1,13 +1,14 @@
 #pragma once
 
-#include <list>
-#include <string>
 
-#include "../ConvertingStrategy.hpp"
+#include <vector>
 
 
-class Purifier: public ConvertingStrategy<std::list<std::string>> {
-    std::list<std::string> convert(std::list<std::string>& input) {
-        return {};
+template<class EntityT>
+class Purifier {
+public:
+    static void removeDuplicatesAndSort(std::vector<EntityT> vec) {
+        sort( vec.begin(), vec.end() );
+        vec.erase( unique( vec.begin(), vec.end() ), vec.end() );
     }
 };

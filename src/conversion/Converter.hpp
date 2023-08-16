@@ -14,6 +14,8 @@
 #include "fetching/DataFetcher.hpp"
 #include "fetching/DataFetcherConfig.hpp"
 
+#include "purification/Purifier.hpp"
+
 #include "ConverterConfig.hpp"
 
 
@@ -42,6 +44,11 @@ public:
     }
 
     void convert() {
+        removeDuplicatesAndSort();
+        if (config.purificationOnlyRequired) {
+            return;
+        }
+
 
     }
 
@@ -61,6 +68,12 @@ protected:
     explicit Converter(ConverterConfig converterConfig) :
         config(converterConfig),
         dataFetcher(DataFetcher<SizeT>::createFromDataFetcherConfig(
-                DataFetcherConfig<SizeT> {hosts, ranges, subnets, config.inputRecordsDelimiter, *logger}
+                DataFetcherConfig<SizeT> {&hosts, &ranges, &subnets, config.inputRecordsDelimiter, *logger}
                 )) {};
+
+    void removeDuplicatesAndSort() {
+        Purifier<Host<SizeT>>::removeDuplicatesAndSort(hosts);
+        Purifier<Range<SizeT>>::removeDuplicatesAndSort(ranges);
+        Purifier<Subnet<SizeT>>::removeDuplicatesAndSort(subnets);
+    }
 };

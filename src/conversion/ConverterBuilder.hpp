@@ -26,19 +26,3 @@ public:
     template<class SizeT>
     [[nodiscard]] Converter<SizeT> getConverter() const;
 };
-
-
-// IPv4
-template<>
-Converter<uint32_t> ConverterBuilder::getConverter() const {
-    assert(!(this->converterConfig.rangesBuildingRequired && this->converterConfig.rangesDecompositionRequired));
-    assert(!(
-            this->converterConfig.purificationOnlyRequired &&
-            (
-                    this->converterConfig.rangesDecompositionRequired ||
-                    this->converterConfig.rangesBuildingRequired ||
-                    this->converterConfig.compressionRequired
-            )));
-
-    return Converter<uint32_t>::createFromConverterConfig(converterConfig);
-}

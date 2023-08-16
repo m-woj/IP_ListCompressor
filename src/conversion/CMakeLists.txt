@@ -6,6 +6,13 @@ set(CMAKE_CXX_EXTENSIONS        OFF)
 
 project(${PROJECT_NAME})
 
-add_library(${PROJECT_NAME}
+add_subdirectory(compression)
+add_subdirectory(fetching)
+add_subdirectory(purification)
+add_subdirectory(ranges_building)
+add_subdirectory(ranges_decomposition)
+
+add_library(${PROJECT_NAME} STATIC
         ConverterBuilder.cpp
+        compression fetching purification ranges_building ranges_decomposition
         )

@@ -11,5 +11,5 @@ struct ConverterConfig {
     bool rangesBuildingRequired = false;
     bool purificationOnlyRequired = false;
 
-    char inputRecordsDelimiter[RECORDS_DELIMITER_SIZE] = "";
+    char inputRecordsDelimiter = '\n';
 };

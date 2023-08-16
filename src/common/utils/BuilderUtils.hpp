@@ -11,7 +11,7 @@ struct BuilderUtils {
             throw std::length_error(errorMessage);
         }
         else {
-            std::strcpy(dst, src);
+            dst = *src;
         }
     };
 };

@@ -6,10 +6,11 @@ set(CMAKE_CXX_EXTENSIONS        OFF)
 
 project(${PROJECT_NAME})
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}
+        DataFetcher.cpp)
 
 add_subdirectory(ip_v4)
 
-target_link_libraries(${PROJECT_NAME} INTERFACE
+target_link_libraries(${PROJECT_NAME}
         ip_v4)
 

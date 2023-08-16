@@ -20,6 +20,10 @@ public:
         return this->getValue() == other.getValue();
     }
 
+    bool operator< (const Host<SizeT>& other) const {
+        return this->getValue() < other.getValue();
+    }
+
 private:
     explicit Host(SizeT value): value(value) {};
 };
