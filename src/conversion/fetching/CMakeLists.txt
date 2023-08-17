@@ -6,11 +6,6 @@ set(CMAKE_CXX_EXTENSIONS        OFF)
 
 project(${PROJECT_NAME})
 
-add_subdirectory(../../common common)
-
 add_library(${PROJECT_NAME}
         DataFetcherIPv4.cpp)
-
-target_link_libraries(${PROJECT_NAME}
-        common)
 

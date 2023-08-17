@@ -14,12 +14,10 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_subdirectory(../../subnet_transformer subnet_transformer_build)
-
 add_executable(${PROJECT_NAME}
         TestSubnetTransformer.cpp)
 
-target_link_libraries(${PROJECT_NAME} GTest::gtest_main subnet_transformer)
+target_link_libraries(${PROJECT_NAME} GTest::gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

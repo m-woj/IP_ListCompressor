@@ -14,13 +14,12 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_subdirectory(../../common common)
 add_subdirectory(../../conversion conversion)
 
 add_executable(${PROJECT_NAME}
         TestConverter.cpp)
 
-target_link_libraries(${PROJECT_NAME} GTest::gtest_main ip_entity logging conversion)
+target_link_libraries(${PROJECT_NAME} GTest::gtest_main conversion)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

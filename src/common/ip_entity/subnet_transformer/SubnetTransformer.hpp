@@ -1,11 +1,9 @@
 #pragma once
 
-#include <cassert>
-#include <cstdint>
-
 #include "../../utils/SubnetUtils.hpp"
 
-#include "SubnetTransformerIPv4.hpp"
+#include <cassert>
+#include <cstdint>
 
 
 template<class SizeT>
@@ -15,13 +13,25 @@ class SubnetTransformer {};
 template<> class SubnetTransformer<uint32_t> {
 public:
     static uint32_t getSubnetSizeFromMaskLength(unsigned char maskLength) {
-        return SubnetTransformerIPv4::getSubnetSizeFromMaskLength(maskLength);
+        assert(maskLength > 0);
+
+        uint8_t&& power = (32 - maskLength);
+        uint32_t subnetSize = 1;
+        subnetSize <<= power;
+
+        return subnetSize;
     }
 
     static unsigned char getMaskLengthFromSubnetSize(uint32_t subnetSize) {
         assert(SubnetUtils::isValidSubnetSize(subnetSize));
 
-        return SubnetTransformerIPv4::getMaskLengthFromSubnetSize(subnetSize);
+        unsigned char maskLength = 33;
+        while (subnetSize != 0) {
+            maskLength--;
+            subnetSize >>= 1;
+        }
+
+        return maskLength;
     }
 
     static uint32_t getLastValueFromFirstValueAndSubnetSize(uint32_t firstValue, uint32_t subnetSize) {

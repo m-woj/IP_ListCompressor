@@ -6,10 +6,10 @@
 struct ConverterConfig {
     bool multithreadingRequired = false;
 
-    bool compressionRequired = true;
+    bool compressionRequired = false;
     bool rangesDecompositionRequired = false;
     bool rangesBuildingRequired = false;
-    bool purificationOnlyRequired = false;
+    bool purificationOnlyRequired = true;
 
     char inputRecordsDelimiter = '\n';
 };

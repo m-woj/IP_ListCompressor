@@ -19,11 +19,9 @@ FetchContent_MakeAvailable(googletest)
 add_subdirectory(../../../common common)
 
 add_executable(${PROJECT_NAME}
-        TestDataFetcher.cpp
         TestDataFetcherIPv4.cpp
         ../DataFetcherIPv4.cpp
 )
-
 
 target_link_libraries(${PROJECT_NAME}
         GTest::gtest_main common)
