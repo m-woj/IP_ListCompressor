@@ -1,16 +1,9 @@
+#include "DataFetcherIPv4.hpp"
+
 #include <optional>
 #include <cstdlib>
 #include <iostream>
 #include <arpa/inet.h>
-
-#include "../../../consts.hpp"
-
-#include "../../../common/ip_entity/Host.hpp"
-#include "../../../common/ip_entity/Range.hpp"
-#include "../../../common/ip_entity/Subnet.hpp"
-
-
-#include "DataFetcherIPv4.hpp"
 
 
 void tryFetchEntity(std::basic_string<char>& text, const DataFetcherConfig<uint32_t>& config);
@@ -26,11 +19,11 @@ void tryFetchHost(const std::basic_string<char>& textBuffer, DataFetcherConfig<u
 std::optional<uint32_t> tryConvertHostStringToValue(const char* hostString);
 
 
-void DataFetcherIPv4::fetch(const DataFetcherConfig<uint32_t>& config, std::basic_istream<char> &inputStream) {
+void DataFetcherIPv4::fetch(std::istream& inputStream, DataFetcherConfig<unsigned int> const& config) {
     std::basic_string<char> textBuffer;
     textBuffer.reserve(IP_TEXT_SIZE);
 
-    while(getline(inputStream, textBuffer, config.recordsDelimiter)) {
+    while (getline(inputStream, textBuffer, config.recordsDelimiter)) {
         tryFetchEntity(textBuffer, config);
     }
 }
@@ -84,7 +77,7 @@ void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcher
         return;
     }
 
-    config.subnets->emplace_back(Subnet<uint32_t>::createFromInitialValueAndMaskLength(
+    config.subnets.emplace_back(Subnet<uint32_t>::createFromInitialValueAndMaskLength(
             hostValue.value(),
             maskLength
             ));
@@ -127,7 +120,7 @@ void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherC
         return;
     }
 
-    config.ranges->emplace_back(Range<uint32_t>::createFromFirstAndLastHost(
+    config.ranges.emplace_back(Range<uint32_t>::createFromFirstAndLastHost(
             Host<uint32_t>::createFromInitialValue(firstHostValue.value()),
             Host<uint32_t>::createFromInitialValue(lastHostValue.value())
             ));
@@ -137,7 +130,7 @@ void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherC
 void tryFetchHost(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t> config) {
     auto hostValue = tryConvertHostStringToValue(textBuffer.c_str());
     if (hostValue.has_value()) {
-        config.hosts->emplace_back(Host<uint32_t>::createFromInitialValue(hostValue.value()));
+        config.hosts.emplace_back(Host<uint32_t>::createFromInitialValue(hostValue.value()));
     }
     else {
         config.logger.logInfo("Invalid host: " + textBuffer);

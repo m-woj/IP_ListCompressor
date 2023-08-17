@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25)
 
-set(PROJECT_NAME fetching_ipv4_test)
+set(PROJECT_NAME                fetching_test)
+set(CMAKE_CXX_STANDARD          23)
+set(CMAKE_CXX_EXTENSIONS        OFF)
 
 project(${PROJECT_NAME})
 
@@ -14,13 +16,17 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_subdirectory(../../../../common common)
-add_subdirectory(../../ip_v4 fetching_ip_v4)
+add_subdirectory(../../../common common)
 
 add_executable(${PROJECT_NAME}
-        TestDataFetcherIPv4.cpp)
+        TestDataFetcher.cpp
+        TestDataFetcherIPv4.cpp
+        ../DataFetcherIPv4.cpp
+)
 
-target_link_libraries(${PROJECT_NAME} GTest::gtest_main common fetching_ip_v4)
+
+target_link_libraries(${PROJECT_NAME}
+        GTest::gtest_main common)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})

@@ -13,9 +13,9 @@
 
 template<class SizeT>
 struct DataFetcherConfig {
-    std::vector<Host<SizeT>>* hosts;
-    std::vector<Range<SizeT>>* ranges;
-    std::vector<Subnet<SizeT>>* subnets;
+    std::vector<Host<SizeT>>& hosts;
+    std::vector<Range<SizeT>>& ranges;
+    std::vector<Subnet<SizeT>>& subnets;
 
     char recordsDelimiter {'\n'};
 

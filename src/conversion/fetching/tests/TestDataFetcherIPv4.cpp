@@ -29,11 +29,11 @@ auto testFetching = [](auto& inputStream, auto& expectedOutput, auto recordsDeli
 
     auto output = ConversionData{};
     DataFetcherConfig<uint32_t> config {
-            &output.hosts, &output.ranges, &output.subnets,
+            output.hosts, output.ranges, output.subnets,
             recordsDelimiter, logger
     };
 
-    DataFetcherIPv4::fetch(config, inputStream);
+    DataFetcherIPv4::fetch(inputStream, config);
 
     testEquality(output.hosts, expectedOutput.hosts, info);
     testEquality(output.subnets, expectedOutput.subnets, info);

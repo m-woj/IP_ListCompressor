@@ -5,17 +5,9 @@
 
 #include "../../common/logging/Logger.hpp"
 
-#include "ip_v4/DataFetcherIPv4.hpp"
+#include "DataFetcherIPv4.hpp"
 
 #include "DataFetcherConfig.hpp"
-
-
-template<class SizeT>
-void fetch(std::basic_istream<char>& inputStream, DataFetcherConfig<SizeT> config);
-
-template<> void fetch<uint32_t>(std::basic_istream<char>& inputStream, DataFetcherConfig<uint32_t> config) {
-    DataFetcherIPv4::fetch(config, inputStream);
-}
 
 
 template<class SizeT>
@@ -34,7 +26,7 @@ public:
     }
 
     void fetch(std::basic_istream<char>& inputStream) {
-        ::fetch(inputStream, config);
+        return DataFetcherIPv4::fetch(inputStream, config);
     }
 
 private:

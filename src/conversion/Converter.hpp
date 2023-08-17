@@ -67,7 +67,7 @@ protected:
     explicit Converter(ConverterConfig converterConfig) :
         config(converterConfig),
         dataFetcher(DataFetcher<SizeT>::createFromDataFetcherConfig(
-                DataFetcherConfig<SizeT> {&hosts, &ranges, &subnets, config.inputRecordsDelimiter, *logger}
+                DataFetcherConfig<SizeT> {hosts, ranges, subnets, config.inputRecordsDelimiter, *logger}
                 )) {};
 
     void removeDuplicatesAndSort() {
