@@ -1,33 +1,23 @@
 #pragma once
 
 #include <string>
-#include <vector>
 #include <memory>
 #include <istream>
-
-#include "../common/ip_entity/Host.hpp"
-#include "../common/ip_entity/Range.hpp"
-#include "../common/ip_entity/Subnet.hpp"
-
-#include "../common/logging/Logger.hpp"
 
 #include "fetching/DataFetcher.hpp"
 #include "fetching/DataFetcherConfig.hpp"
 
 #include "purification/Purifier.hpp"
 
+#include "ConversionCommons.hpp"
 #include "ConverterConfig.hpp"
 
 
 template<class SizeT>
 class Converter {
     const ConverterConfig config;
-    std::shared_ptr<Logger> logger = std::make_unique<Logger>();
     DataFetcher<SizeT> dataFetcher;
-
-    std::vector<Host<SizeT>> hosts{};
-    std::vector<Range<SizeT>> ranges{};
-    std::vector<Subnet<SizeT>> subnets{};
+    ConversionCommons<SizeT> conversionCommons {};
 
 public:
     static Converter<SizeT> createFromConverterConfig(ConverterConfig converterConfig) {
@@ -35,8 +25,7 @@ public:
     };
 
     void setLogger(const std::shared_ptr<Logger>& newLogger) {
-        logger = newLogger;
-        dataFetcher.setLogger(newLogger);
+        conversionCommons.logger = newLogger;
     }
 
     void addDataFromStream(std::basic_istream<char>& inputStream) {
@@ -52,27 +41,27 @@ public:
     }
 
     [[nodiscard]] const std::vector<Host<SizeT>>& getConvertedHosts() const {
-        return hosts;
+        return conversionCommons.hosts;
     }
 
     [[nodiscard]] const std::vector<Range<SizeT>>& getConvertedRanges() const {
-        return ranges;
+        return conversionCommons.ranges;
     }
 
     [[nodiscard]] const std::vector<Subnet<SizeT>>& getConvertedSubnets() const {
-        return subnets;
+        return conversionCommons.subnets;
     }
 
 protected:
     explicit Converter(ConverterConfig converterConfig) :
         config(converterConfig),
         dataFetcher(DataFetcher<SizeT>::createFromDataFetcherConfig(
-                DataFetcherConfig<SizeT> {hosts, ranges, subnets, config.inputRecordsDelimiter, *logger}
+                DataFetcherConfig<SizeT> {conversionCommons, config.inputRecordsDelimiter}
                 )) {};
 
     void removeDuplicatesAndSort() {
-        Purifier<Host<SizeT>>::removeDuplicatesAndSort(hosts);
-        Purifier<Range<SizeT>>::removeDuplicatesAndSort(ranges);
-        Purifier<Subnet<SizeT>>::removeDuplicatesAndSort(subnets);
+        Purifier<Host<SizeT>>::removeDuplicatesAndSort(conversionCommons.hosts);
+        Purifier<Range<SizeT>>::removeDuplicatesAndSort(conversionCommons.ranges);
+        Purifier<Subnet<SizeT>>::removeDuplicatesAndSort(conversionCommons.subnets);
     }
 };

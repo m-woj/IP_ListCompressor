@@ -64,7 +64,7 @@ void sendDataFromDataProviderToConverter(const InputDataProvider& dataProvider, 
     if (dataProvider.hasAnyData()) {
         const auto& sourceFiles = dataProvider.getSourceFiles();
         std::for_each(sourceFiles.begin(), sourceFiles.end(),
-                      [&converter](const std::basic_istream<char>& sourceFile) {
+                      [&converter](std::basic_istream<char>& sourceFile) {
                           converter.addDataFromStream(sourceFile);
                       });
     }

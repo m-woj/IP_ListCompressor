@@ -65,7 +65,7 @@ void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcher
             textBuffer.substr(0, delimiterPos).c_str());
 
     if (!hostValue.has_value()) {
-        config.logger.logInfo("Invalid subnet: " + textBuffer);
+        config.conversionCommons.logger->logInfo("Invalid subnet: " + textBuffer);
         return;
     }
 
@@ -73,11 +73,11 @@ void tryFetchSubnet(const std::basic_string<char>& textBuffer, const DataFetcher
     maskLength = std::strtol(textBuffer.c_str() + delimiterPos + 1, nullptr, 10);
 
     if (maskLength < 1 || maskLength > 32) {
-        config.logger.logInfo("Invalid mask length: " + textBuffer);
+        config.conversionCommons.logger->logInfo("Invalid mask length: " + textBuffer);
         return;
     }
 
-    config.subnets.emplace_back(Subnet<uint32_t>::createFromInitialValueAndMaskLength(
+    config.conversionCommons.subnets.emplace_back(Subnet<uint32_t>::createFromInitialValueAndMaskLength(
             hostValue.value(),
             maskLength
             ));
@@ -108,7 +108,7 @@ void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherC
             textBuffer.substr(0, delimiterPos).c_str());
 
     if (!firstHostValue.has_value()) {
-        config.logger.logInfo("Invalid first host of a range: " + textBuffer);
+        config.conversionCommons.logger->logInfo("Invalid first host of a range: " + textBuffer);
         return;
     }
 
@@ -116,11 +116,11 @@ void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherC
             textBuffer.c_str() + delimiterPos + 1);
 
     if (!lastHostValue.has_value()) {
-        config.logger.logInfo("Invalid last host of a range: " + textBuffer);
+        config.conversionCommons.logger->logInfo("Invalid last host of a range: " + textBuffer);
         return;
     }
 
-    config.ranges.emplace_back(Range<uint32_t>::createFromFirstAndLastHost(
+    config.conversionCommons.ranges.emplace_back(Range<uint32_t>::createFromFirstAndLastHost(
             Host<uint32_t>::createFromInitialValue(firstHostValue.value()),
             Host<uint32_t>::createFromInitialValue(lastHostValue.value())
             ));
@@ -130,10 +130,10 @@ void tryFetchRange(const std::basic_string<char>& textBuffer, const DataFetcherC
 void tryFetchHost(const std::basic_string<char>& textBuffer, const DataFetcherConfig<uint32_t> config) {
     auto hostValue = tryConvertHostStringToValue(textBuffer.c_str());
     if (hostValue.has_value()) {
-        config.hosts.emplace_back(Host<uint32_t>::createFromInitialValue(hostValue.value()));
+        config.conversionCommons.hosts.emplace_back(Host<uint32_t>::createFromInitialValue(hostValue.value()));
     }
     else {
-        config.logger.logInfo("Invalid host: " + textBuffer);
+        config.conversionCommons.logger->logInfo("Invalid host: " + textBuffer);
     }
 }
 

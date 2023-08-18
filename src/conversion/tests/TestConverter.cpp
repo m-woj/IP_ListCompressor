@@ -13,5 +13,6 @@ TEST(Converter, purificationTest) {
     std::stringstream inputStream = std::stringstream() << "0.0.0.1,0.0.0.2,0.0.0.1";
     converter.addDataFromStream(inputStream);
     converter.convert();
-    ASSERT_EQ(converter.getConvertedHosts().size(), 3);
+
+    ASSERT_EQ(converter.getConvertedHosts().size(), 2);
 }

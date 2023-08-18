@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <iostream>
 #include <memory>
 
@@ -13,22 +14,20 @@
 template<class SizeT>
 class DataFetcher {
     DataFetcherConfig<SizeT> config;
-    std::shared_ptr<Logger> logger = std::make_shared<Logger>();
 
 public:
     static DataFetcher<SizeT> createFromDataFetcherConfig(DataFetcherConfig<SizeT> config) {
         return DataFetcher<SizeT>(config);
     }
 
-    void setLogger(const std::shared_ptr<Logger>& newLogger) {
-        logger = newLogger;
-        config.logger = *newLogger;
-    }
-
-    void fetch(std::basic_istream<char>& inputStream) {
-        return DataFetcherIPv4::fetch(inputStream, config);
-    }
+    inline void fetch(std::basic_istream<char>& inputStream);
 
 private:
     explicit DataFetcher(DataFetcherConfig<SizeT> config): config(config) {}
 };
+
+
+template<>
+inline void DataFetcher<uint32_t>::fetch(std::basic_istream<char> &inputStream) {
+    return DataFetcherIPv4::fetch(inputStream, config);
+}
