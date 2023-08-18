@@ -1,6 +1,3 @@
-#include "../consts.hpp"
-#include "../common//utils/BuilderUtils.hpp"
-
 #include "ConverterBuilder.hpp"
 
 
@@ -54,11 +51,8 @@ ConverterBuilder& ConverterBuilder::setPurificationOnlyRequirement(bool purifica
 }
 
 
-ConverterBuilder& ConverterBuilder::setInputRecordsDelimiter(const char* inputRecordsDelimiter) {
-    BuilderUtils::setOrThrowException(inputRecordsDelimiter,
-                                      this->converterConfig.inputRecordsDelimiter,
-                                      RECORDS_DELIMITER_MAX_LENGTH,
-                                      "Input records delimiter is too long.");
+ConverterBuilder& ConverterBuilder::setInputRecordsDelimiter(char inputRecordsDelimiter) {
+    this->converterConfig.inputRecordsDelimiter = inputRecordsDelimiter;
 
     return *this;
 }

@@ -21,7 +21,7 @@ public:
 
     [[maybe_unused]] ConverterBuilder& setPurificationOnlyRequirement(bool purificationOnlyRequired);
 
-    [[maybe_unused]] ConverterBuilder& setInputRecordsDelimiter(const char* inputRecordsDelimiter);
+    [[maybe_unused]] ConverterBuilder& setInputRecordsDelimiter(char inputRecordsDelimiter);
 
     template<class SizeT>
     [[nodiscard]] Converter<SizeT> getConverter() const;
